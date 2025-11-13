@@ -24,6 +24,8 @@ Entonces, además de la eficiencia algorítmica, nos preocupa la eficiencia en e
 
 ### Ejemplo
 
+Escribir un programa que tome una cadena de caracteres representando los puntos de un partido de tenis, y devuelva el ganador del partido.
+
 En el tenis, un partido se estructura en tres niveles: puntos, games y sets.
 
 - El primero en tener al menos cuatro puntos y dos de ventaja sobre el oponente gana un game
