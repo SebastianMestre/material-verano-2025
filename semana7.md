@@ -1,4 +1,3 @@
 # Semana 7
 
-- Programación dinámica
-
+- Matematica (potlog, gcd, criba, factorizacion)

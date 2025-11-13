@@ -1,4 +1,3 @@
 # Semana 9
 
-- Estructuras de datos II (segment tree, trie)
-
+- Programación dinámica II (optimizacion: mochila,caminos minimos en grillas, etc)
