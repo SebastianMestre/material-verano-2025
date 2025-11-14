@@ -1,3 +1,3 @@
 # Semana 10
 
-- Grafos II (dijkstra, kruskal)
+- Programación dinámica II (optimizacion: mochila,caminos minimos en grillas, etc)

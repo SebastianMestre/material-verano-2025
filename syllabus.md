@@ -5,6 +5,7 @@
 - Setup para compilar y correr tests localmente
 - Sitios para competir en equipo e individualmente
 - Entrenamiento y estrategia de un equipo
+- Q&A
 
 ## Semana 2
 
@@ -35,17 +36,21 @@
 
 ## Semana 8
 
-- Estructuras de datos II (segment tree, trie)
+- Entrenamiento y estrategia de un equipo II
+- Q&A
 
 ## Semana 9
 
-- Programación dinámica II (optimizacion: mochila,caminos minimos en grillas, etc)
+- Estructuras de datos II (segment tree, trie)
 
 ## Semana 10
 
-- Grafos II (dijkstra, kruskal)
+- Programación dinámica II (optimizacion: mochila,caminos minimos en grillas, etc)
 
 ## Semana 11
 
+- Grafos II (dijkstra, kruskal)
+
+## Semana 12 (extra)
+
 - Algoritmos de raíz cuadrada (partir en bloques de raiz(N), separar en grandes y chicos, rebuild cada raiz pasos, agrupar los de igual tamaño)
-- Entrenamiento y estrategia de un equipo II
