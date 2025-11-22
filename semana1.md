@@ -1,10 +1,28 @@
 # Semana 1
 
+- Información sobre el curso
 - Introduccion a ICPC
 - Sitios para competir en equipo e individualmente
 - El notebook de ICPC
 - Scripts para compilar y correr tests localmente
 - Entrenamiento y estrategia de un equipo
+
+## Informacion sobre el curso
+
+- Lugar: servidor de Discord (canal "Clases")
+- Horario: sábados 11 AM (UTC-4)
+- Formato: Teoría + Resolución de problemas + Recomendaciones de problemas y simulacros
+
+### Instructor
+
+Sebastián Mestre
+
+- Argentino, Universidad Nacional de Rosario
+- Empecé a hacer programación competitiva en 2017
+- International Olympiad in Informatics (IOI) Japón 2018, Azerbaiyán 2019, Singapur 2020
+- International Collegiate Programming Contest World Finals (ICPC) Egipto 2023, Kazajistán 2024
+- Entrenador del equipo Argentino de IOI 2025
+- Coach de equipo de ICPC clasificado a la final de Azerbaiyán 2025 y a la semifinal Chile 2026
 
 ## Introducción a ICPC
 
