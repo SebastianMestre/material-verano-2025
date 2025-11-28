@@ -218,13 +218,13 @@ cout << "\n";
 ```c++
 int ans = a[1] - a[0];
 
-set<int> valores;
+set<int> s;
 for (int x : a) { // O(N) iteraciones
-  if (auto it = valores.upper_bound(x); it != end(valores)) { // O(log N)
-    ans = min(ans, *it - x);
+  if (auto it = s.upper_bound(x); it != end(s)) { // O(log N)
+    ans = min(ans, *it - x); // O(1)
   }
-  if (auto it = valores.lower_bound(x); it != begin(valores)) { // O(log N)
-    ans = min(ans, x - *prev(it));
+  if (auto it = s.lower_bound(x); it != begin(s)) { // O(log N)
+    ans = min(ans, x - *prev(it)); // O(1)
   }
 }
 // total: O(N log N)
@@ -235,11 +235,32 @@ Simplificar
 ```c++
 int ans = a[1] - a[0];
 
-set<int> valores(begin(a), end(a));
+set<int> s(begin(a), end(a)); // O(1)
 for (int x : a) { // O(N) iteraciones
-  if (auto it = valores.upper_bound(x); it != end(valores)) { // O(log N)
+  if (auto it = s.upper_bound(x); it != end(s)) { // O(log N)
     ans = min(ans, *it - x);
   }
 }
+// total: O(N log N)
+```
+
+```c++
+int ans = a[1] - a[0];
+
+set<int> s(begin(a), end(a)); // O(N log N)
+auto it1 = begin(s); // O(1)
+for (auto it2 = next(it1); it2 != end(s); ++it2) { // O(N) iteraciones
+  ans = min(ans, *it2 - *it1); // O(1)
+  it1 = it2; // O(1)
+}
+// total: O(N log N)
+```
+
+
+```c++
+int ans = a[1] - a[0];
+
+sort(begin(a), end(a)); // O(N log N)
+forn(i, n-1) ans = min(ans, a[i+1] - a[i]); // O(N)
 // total: O(N log N)
 ```
