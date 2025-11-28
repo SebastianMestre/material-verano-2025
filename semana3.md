@@ -99,6 +99,8 @@ No siempre se puede (por ejemplo si arrancas con todos Rojos, no podes intercamb
 
 - Dadas las cantidades de cada color `R`, `V` y `A`, responder si se puede
 
+<https://cses.fi/problemset/task/1754> - Coin Piles (parecido al problema de los tickets)
+
 # El del escalon
 
 Hay una funcion no-decreciente que cumple que f(0) = 0 y f(100) = 1. Como podemos encontrar el primer punto donde f es 1?
