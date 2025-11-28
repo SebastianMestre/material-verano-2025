@@ -256,6 +256,7 @@ for (auto it2 = next(it1); it2 != end(s); ++it2) { // O(N) iteraciones
 // total: O(N log N)
 ```
 
+# `<algorithm>`
 
 ```c++
 int ans = a[1] - a[0];
