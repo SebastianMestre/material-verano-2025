@@ -85,12 +85,7 @@
       \[
         N^2 + N \sim N^2.
       \]
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Solo importa el orden de magnitud}
-%  \begin{itemize}
-    \item En práctica competitiva el límite de tiempo suele ser bastante holgado, incluso \textbf{20x más de lo necesario}.
+    \item En práctica competitiva el límite de tiempo suele ser bastante holgado, \href{https://codeforces.com/contest/2109/status}{incluso \textbf{20x más de lo necesario}}.
       \begin{itemize}
         \item Nos importa diferenciar \(N\) de \(N^2\).
         \item Pero no distinguir entre \(0{,}5N\) y \(10N\).
@@ -127,14 +122,15 @@
 
 \begin{frame}[fragile]{Operaciones básicas: \(O(1)\)}
   \begin{itemize}
-    \item En el modelo usual, muchas operaciones simples tienen \textbf{costo constante} \(O(1)\).
+    \item Muchas operaciones simples (y no tan simples) tienen \textbf{costo constante} \(O(1)\).
   \end{itemize}
   \begin{block}{Ejemplo}
   \begin{lstlisting}[style=customc]
 int x = 0;
 x += 1; // O(1)
-x *= 2; // O(1)
+x *= 5; // O(1)
 x %= 3; // O(1)
+x += sqrt(x * 10); // O(1)
   \end{lstlisting}
   \end{block}
 \end{frame}
@@ -156,7 +152,7 @@ for (int i = 0; i < N; ++i) { // O(N) iteraciones
 
 \begin{frame}[fragile]{Bucles anidados: multiplicar costos}
   \begin{itemize}
-    \item Si tenemos bucles anidados, los costos se \textbf{multiplican}.
+    \item Si tenemos algo dentro de un bucle, el costo se \textbf{multiplica} por la cantidad de operaciones.
   \end{itemize}
   \begin{block}{Ejemplo}
   \begin{lstlisting}[style=customc]

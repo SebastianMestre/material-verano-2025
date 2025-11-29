@@ -1,0 +1,338 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegray}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{gray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  language=C++
+}
+
+\lstset{style=customc}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+\usetheme{Madrid}
+
+\title{La STL en C++}
+\author{Sebastian Mestre}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Introducción}
+
+\begin{frame}{¿Qué es la STL?}
+  \begin{itemize}
+    \item C++ trae varias \textbf{estructuras de datos} y \textbf{algoritmos} ya implementados.
+    \item El objetivo es \textbf{simplificarnos la vida}: usar código probado en lugar de reinventar la rueda.
+    \item Algunos contenedores importantes:
+      \begin{itemize}
+        \item \texttt{std::vector<T>} — arreglo dinámico.
+        \item \texttt{std::set<T>} — conjunto ordenado.
+        \item \texttt{std::map<K,V>} — diccionario ordenado por clave.
+        \item \texttt{std::stack<T>} — pila (LIFO).
+        \item \texttt{std::queue<T>} — cola (FIFO).
+        \item \texttt{std::priority\_queue<T>} — cola de prioridad (max heap).
+      \end{itemize}
+    \item Referencia completa: \href{https://en.cppreference.com/w/cpp/container}{cppreference: containers}.
+  \end{itemize}
+\end{frame}
+
+\section{Iteradores}
+
+\begin{frame}{Interfaz de iteradores}
+  \begin{itemize}
+    \item Muchas estructuras de la STL exponen una \textbf{interfaz de iteradores} para recorrer sus elementos.
+    \item Funciones y operaciones básicas:
+      \begin{itemize}
+        \item \texttt{begin(s)} — iterador al inicio de una secuencia \texttt{s}.
+        \item \texttt{end(s)} — iterador al final de una secuencia \texttt{s}.
+        \item \texttt{*it} — elemento apuntado por el iterador \texttt{it}.
+      \end{itemize}
+    \item Conceptualmente, un iterador representa una \textbf{posición} en la secuencia.
+    \item En una secuencia de \(N\) elementos hay \(N+1\) posiciones (antes del primero, entre cada par, y después del último).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recorriendo con iteradores}
+  \begin{itemize}
+    \item Podemos recorrer una secuencia usando un bucle \texttt{for} con iteradores.
+  \end{itemize}
+  \begin{block}{Ejemplo}
+  \begin{lstlisting}[style=customc]
+vector<int> s = {2, 3, 5, 8, 13};
+
+for (auto it = begin(s); it != end(s); ++it) {
+  cout << *it << " ";
+}
+cout << "\n";
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Operaciones útiles sobre iteradores:
+      \begin{itemize}
+        \item \texttt{it1 == it2} verifica si apuntan a la misma posición.
+        \item \texttt{++it} / \texttt{--it} avanzar / retroceder.
+        \item \texttt{prev(it)}, \texttt{next(it)} — iterador anterior / siguiente.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Ejemplo: mínima diferencia}
+
+\begin{frame}{Problema de ejemplo}
+  \begin{block}{Enunciado}
+    Nos dan un arreglo de \(N\) números distintos \(a[1], a[2], \dots, a[N]\).\\
+    Encontrar la \textbf{mínima diferencia} entre dos elementos de este arreglo.
+  \end{block}
+  \begin{itemize}
+    \item Restricciones:
+      \begin{itemize}
+        \item \(1 \le N \le 5 \cdot 10^5\)
+        \item \(1 \le a[i] \le 10^9\)
+      \end{itemize}
+    \item Entrada:
+      \begin{itemize}
+        \item Primera línea: \(N\).
+        \item Segunda línea: los \(N\) valores distintos \(a[1], \dots, a[N]\).
+      \end{itemize}
+    \item Salida: la mínima diferencia entre dos elementos de \(a\).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de entrada/salida}
+  \begin{block}{Ejemplo}
+  \small
+  Entrada:
+  \begin{verbatim}
+6
+9000 5004 1000 8900 5001 1100
+  \end{verbatim}
+  Salida:
+  \begin{verbatim}
+3
+  \end{verbatim}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Solución naive \(O(N^2)\)}
+  \begin{itemize}
+    \item Idea: probar \textbf{todos los pares} \((i, j)\) y quedarnos con la mínima diferencia.
+    \item Complejidad: \(O(N^2)\), demasiado lenta para \(N = 5 \cdot 10^5\).
+  \end{itemize}
+  \begin{block}{Código}
+  \begin{lstlisting}[style=customc]
+int a[500100];
+int main() {
+  int n; cin >> n;
+  forn(i, n) cin >> a[i];
+
+  int ans = abs(a[1] - a[0]);
+  forn(i, n) forn(j, n)
+      if (i != j) ans = min(ans, abs(a[i] - a[j]));
+  cout << ans << "\n";
+}\end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{std::vector}
+
+\begin{frame}{\texttt{std::vector}: arreglo dinámico}
+  \begin{itemize}
+    \item \texttt{std::vector<T>} es la estructura más usada en programación competitiva.
+    \item Se comporta como un \textbf{arreglo dinámico}:
+      \begin{itemize}
+        \item \texttt{vector<T>(n)} crea un vector de \(n\) elementos.
+        \item \texttt{a[i]} acceso al elemento en la posición \(i\).
+        \item \texttt{a.size()} tamaño del vector. (todas las estructuras de la STL tienen esto)
+        \item \texttt{a.push\_back(x)} agrega un elemento al final.
+        \item \texttt{a.pop\_back()} elimina el último elemento.
+        \item \texttt{a.back()} último elemento.
+        \item \texttt{a.clear()} vacia un vector
+        \item \texttt{a.empty()} responde si esta vacio
+        \item \texttt{begin(a)}, \texttt{end(a)} iteradores.
+      \end{itemize}
+    \item Referencia: \href{https://en.cppreference.com/w/cpp/container/vector}{cppreference: vector}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Leyendo con \texttt{vector}}
+  \begin{itemize}
+    \item Con \texttt{vector} no necesitamos fijar un \(N\) máximo a mano.
+  \end{itemize}
+  \begin{block}{Ejemplo}
+  \begin{lstlisting}[style=customc]
+int n; cin >> n;
+
+vector<int> a(n);
+forn(i, n) cin >> a[i];\end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item El resto del código puede ser igual a la versión con arreglo estático.
+  \end{itemize}
+\end{frame}
+
+\section{Usando \texttt{std::set}}
+
+\begin{frame}[fragile]{Solución con \texttt{std::set}}
+  \begin{itemize}
+    \item \texttt{std::set<int>} mantiene los elementos \textbf{ordenados y sin duplicados}.
+    \item Podemos ir insertando elementos y comparar con sus \textbf{vecinos} en el conjunto.
+  \end{itemize}
+  \begin{block}{Idea}
+    Para cada \(x\) en \(a\):
+    \begin{itemize}
+      \item Buscamos el primer elemento \(\ge x\) y el anterior a él.
+      \item Actualizamos la mejor diferencia.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{std::set}}
+  \begin{itemize}
+    \item \texttt{std::set<T>} es un conjunto ordenado de elementos únicos.
+    \item Métodos principales:
+      \begin{itemize}
+        \item \texttt{s.size()} cantidad de elementos
+        \item \texttt{s.empty()} ¿está vacío?
+        \item \texttt{s.clear()} elimina todos los elementos
+        \item \texttt{s.insert(x)} inserta el elemento \(x\)
+        \item \texttt{s.erase(x)} elimina el elemento \(x\)
+        \item \texttt{s.count(x)} indica si \(x\) está presente (1 si está, 0 si no)
+        \item \texttt{s.find(x)} devuelve un iterador a la izquierda de \(x\) (o \texttt{end(s)} si no está)
+        \item \texttt{s.lower\_bound(x)} iterador que separa los elementos \(< x\) de los \(\ge x\)
+        \item \texttt{s.upper\_bound(x)} iterador que separa los elementos \(\le x\) de los \(> x\)
+        \item \texttt{begin(s)}, \texttt{end(s)} iteradores al inicio y final
+      \end{itemize}
+    \item Todos los métodos tienen costo \(O(\log N)\).
+    \item Referencia: \href{https://en.cppreference.com/w/cpp/container/set}{cppreference: set}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Código con \texttt{set} (\(O(N \log N)\))}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+int ans = abs(a[1] - a[0]);
+
+set<int> s;
+for (int x : a) {                      // O(N) iteraciones
+  if (auto it = s.upper_bound(x); it != end(s)) { // O(log N)
+    ans = min(ans, *it - x);           // O(1)
+  }
+  if (auto it = s.lower_bound(x); it != begin(s)) { // O(log N)
+    ans = min(ans, x - *prev(it));     // O(1)
+  }
+  s.insert(x);                         // O(log N)
+}
+// total: O(N log N)
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Variación con \texttt{set}}
+  \begin{itemize}
+    \item También podemos construir el \texttt{set} a partir del \texttt{vector}.
+    \item \textbf{Observación}: todo elemento es vecino derecho de su vecino izquierdo
+  \end{itemize}
+  \begin{block}{Ejemplo}
+  \begin{lstlisting}[style=customc]
+int ans = abs(a[1] - a[0]);
+
+set<int> s(begin(a), end(a)); // O(N log N)
+for (int x : a) {
+  if (auto it = s.upper_bound(x); it != end(s)) {
+    ans = min(ans, *it - x);
+  }
+}
+// total: O(N log N)
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{\texttt{<algorithm>}}
+
+\begin{frame}{La cabecera \texttt{<algorithm>}}
+  \begin{itemize}
+    \item Además de contenedores, C++ trae una \textbf{biblioteca de algoritmos}.
+    \item Algunos muy usados:
+      \begin{itemize}
+        \item \texttt{sort(begin(a), end(a))} ordena el vector \texttt{a}.
+        \item \texttt{reverse(begin(a), end(a))} invierte el orden.
+        \item \texttt{rotate(begin(a), begin(a)+k, end(a))} rota \(k\) posiciones.
+        \item \texttt{unique(begin(a), end(a))} compacta elementos únicos consecutivos.
+        \item \texttt{fill(begin(a), end(a), x)} llena con un valor.
+      \end{itemize}
+    \item Referencia: \href{https://en.cppreference.com/w/cpp/algorithm}{cppreference: algorithm}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Solución óptima con \texttt{sort}}
+  \begin{itemize}
+    \item \textbf{Observación:} Si ordenamos el arreglo, los vecinos serán elementos consecutivos.
+    \item Complejidad total: \(O(N \log N)\).
+  \end{itemize}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+sort(begin(a), end(a)); // O(N log N)
+int ans = a[1] - a[0];
+forn(i, n-1) ans = min(ans, a[i+1] - a[i]);
+cout << ans << "\n";
+// total: O(N log N)
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section*{Práctica}
+
+\begin{frame}{Problemas para practicar}
+  \begin{itemize}
+    \item Problemas de CSES donde la STL y \texttt{<algorithm>} son especialmente útiles:
+      \begin{itemize}
+        \item \href{https://cses.fi/problemset/task/1083}{Missing Number}.
+        \item \href{https://cses.fi/problemset/task/1755}{Palindrome Reorder}.
+        \item \href{https://cses.fi/problemset/task/2205}{Gray Code}.
+        \item \href{https://cses.fi/problemset/task/1621}{Distinct Numbers}.
+        \item \href{https://cses.fi/problemset/task/1091}{Concert Tickets}.
+        \item \href{https://cses.fi/problemset/task/1619}{Restaurant Customers}.
+      \end{itemize}
+    \item Recomendación: implementar varias soluciones usando \texttt{vector}, \texttt{set}, \texttt{map} y algoritmos de la STL.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preguntas}
+  \centering
+  \Huge
+  \textbf{Q\&A}
+\end{frame}
+
+\end{document}
