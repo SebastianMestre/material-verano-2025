@@ -74,7 +74,7 @@ es imposible de saber, pero podemos simplificar.
   
   ```c++
   for (int i = 0; i < N; ++i) { // O(N) iteraciones
-    for (int j = 0; j < M; ++i) { // O(M)
+    for (int j = 0; j < M; ++j) { // O(M)
       ...
     }
   }
@@ -124,3 +124,16 @@ es imposible de saber, pero podemos simplificar.
   }
   // total: O(N / 1 + N / 2 + N / 3 + ... + N / N) = O(N log N)
   ```
+
+----------------
+
+
+  | N máximo | Costo asintotico aceptable (1s) |
+  |----------|---------------------------------|
+  | <= 100   | O(N^4)                          |
+  | <= 500   | O(N^3)                          |
+  | <= 10^4  | O(N^2)                          |
+  | <= 10^5  | O(N sqrt(N))                    |
+  | <= 10^6  | O(N log N)                      |
+  | <= 10^7  | O(N)                            |
+  | <= 10^18 | O(log N)                        |

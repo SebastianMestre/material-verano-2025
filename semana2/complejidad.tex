@@ -1,0 +1,178 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+\usetheme{Madrid}
+
+\title{Complejidad computacional}
+\author{Sebastian Mestre}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}
+  \centering
+  \Huge
+  \textbf{complejidad $\neq$ costo}
+\end{frame}
+
+\begin{frame}{Costo vs complejidad}
+  \begin{block}{\textbf{Definición: complejidad}}
+      La complejidad computacional \textbf{de un problema} es el mínimo costo asintótico posible que tiene \textbf{un programa} que resuelve ese problema.
+
+  \end{block}
+    
+  \begin{itemize}
+  
+    \item Ejemplo: para ordenar un arreglo de elementos que solo podemos comparar de a pares, es sencillo diseñar un algoritmo de costo $O(N^2)$.
+    \item Existen algoritmos más sofisticados (por ejemplo, \emph{merge sort}, \emph{quick sort}) con costo $O(N \log N)$.
+    \item Est\'a demostrado que \textbf{no existen} algoritmos asintóticamente más rápidos.
+    \item Entonces, el problema de ordenar un arreglo tiene complejidad $O(N \log N)$.
+  \end{itemize}
+\end{frame}
+
+\section{P y NP}
+
+\begin{frame}{La clase P}
+  \begin{block}{\textbf{Definición: P}}
+    $P$ es el conjunto de todos los problemas cuya complejidad computacional es \textbf{polinomial}.
+
+    Es decir, problemas que se pueden resolver con costo:
+    \[
+      O(N),\; O(N^2),\; O(N^3),\; O(1),\; O(N \log N), \dots
+    \]
+    
+    Decimos que estos problemas tienen \textbf{complejidad polinomial}.
+  \end{block}
+    
+\end{frame}
+
+\begin{frame}{Problemas fuera de P}
+  \begin{itemize}
+    \item Si un problema no es $P$, tiene complejidad \textbf{mayor que cualquier polinomio}.
+    \item Ejemplos típicos de costos:
+      \[
+        O(2^N),\quad O(N!),\quad \text{o peores.}
+      \]
+    \item Una forma de pensarlos: \textbf{“problemas donde no te queda más opción que probar todas las posibilidades”}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{La clase NP}
+  \begin{block}{\textbf{Definición: NP}}
+    $NP$ es el conjunto de todos los problemas para los cuales verificar si una solución dada es correcta tiene \textbf{complejidad polinomial}.
+  \end{block}
+  \begin{itemize}
+    \item En la práctica, verificar una solución suele ser más fácil que \textbf{encontrarla}.
+    \item La teoría respalda parcialmente esta idea: $P \subseteq NP$.
+    \item En otras palabras: si un problema se puede \textbf{resolver} en tiempo polinomial,
+      entonces también se puede \textbf{verificar} una solución en tiempo polinomial.
+  \end{itemize}
+\end{frame}
+
+\section{Reducciones}
+
+
+\begin{frame}{Reducciones}
+    \begin{itemize}
+        \item En programación competitiva usamos todo el tiempo algoritmos conocidos para resolver problemas nuevos.
+        \item En realidad, esos algoritmos son soluciones a problemas conocidos, y nosotros \textbf{reducimos} nuestro problema a uno de esos problemas conocidos.
+        \begin{block}{\textbf{Definición: reducción}}
+          Una reducción es una funcion que convierte un caso de prueba de un problema a un caso de prueba de otro problema que tiene la misma respuesta.
+        \end{block}
+    \end{itemize}
+\end{frame}
+
+\section{NP-completos}
+
+\begin{frame}{Problemas NP-completos}
+    \begin{block}{\textbf{Definición: NP-completo}}
+      Un problema es NP-completo si es NP y cualquier otro problema de NP se puede reducir a él con costo de reducción polinomial.
+      
+      Es decir, podemos tomar cualquier caso de prueba de cualquier problema de $NP$ y, en tiempo polinomial, convertirlo en un caso de prueba de uno de estos problemas especiales.
+    \end{block}
+
+    \begin{itemize}
+        \item \href{https://en.wikipedia.org/wiki/Boolean_satisfiability_problem}{\textbf{SAT} (satisfacibilidad booleana).}
+        \item \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{\textbf{TSP} (problema del viajante).}
+        \item \textbf{Max-clique}.
+        \item \textbf{Subset-sum}.
+        \item \textbf{Max-independent set}.
+        \item \textbf{Set-cover}.
+  \end{itemize}
+\end{frame}
+
+\section{P vs NP}
+
+\begin{frame}{La gran pregunta: P vs NP}
+  \begin{itemize}
+    \item Sabemos que $P \subseteq NP$.
+    \item Pero nadie sabe si existe algún problema en $NP$ que \textbf{no} esté en $P$.
+    \item En particular, se cree que los problemas \textbf{NP-completos} no pertenecen a $P$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Si un NP-completo estuviera en P...}
+  \begin{itemize}
+    \item Si encontráramos una \textbf{solución polinomial} para algún problema NP-completo:
+      \begin{itemize}
+        \item Podríamos reducir \textbf{cualquier} problema de $NP$ a ese problema NP-completo.
+        \item Resolveríamos también esos problemas en tiempo polinomial.
+      \end{itemize}
+    \item Por lo tanto, se tendría que:
+      \[
+        P = NP.
+      \]
+  \end{itemize}
+\end{frame}
+
+\section{NP-completo en programación competitiva}
+
+\begin{frame}{NP-completo en programación competitiva}
+  \begin{itemize}
+    \item Un NP-completo \textbf{no se puede resolver} rapido para $N$ grande. Sin embargo, muchos \textbf{casos especiales} salen con técnicas estándar.
+    \item Clave: si el problema se parece a uno NP-completo famoso pero tiene una \textbf{pequeña diferencia o restricción}, normalmente:
+      \begin{itemize}
+        \item Esa diferencia es lo que hay que explotar para resolverlo eficientemente.
+      \end{itemize}
+    \item A veces se toma un problema NP-completo con $N$ chico. No olvidemos practicar \textbf{búsquedas exhaustivas}:
+      \begin{itemize}
+        \item DP con bitmasks
+        \item \texttt{next\_permutation}
+        \item backtracking optimizado
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section*{Para leer más}
+
+\begin{frame}{Para leer más}
+  \begin{itemize}
+    \item Material:
+      \begin{itemize}
+        \item \href{https://oia-politecnico.github.io/wiki/complejidad}{Wiki de complejidad (OIA Politécnico)}
+        \item \href{https://en.wikipedia.org/wiki/NP-complete}{NP-complete (wikipedia)}
+        \item \href{https://en.wikipedia.org/wiki/Boolean_satisfiability_problem}{SAT (wikipedia)}
+        \item \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem}{Travelling Salesman Problem (wikipedia)}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Preguntas}
+  \centering
+  \Huge
+  \textbf{Q\&A}
+\end{frame}
+
+\end{document}
