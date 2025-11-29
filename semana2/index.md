@@ -8,4 +8,4 @@
 ## Adjuntos
 
 - [ssum.cpp](ssum/ssum.cpp)
-- [gen.py](ssum/gen.cpp)
+- [gen.py](ssum/gen.py)
