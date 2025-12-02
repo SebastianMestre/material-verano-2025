@@ -1,7 +1,10 @@
 # Semana 3
 
+- Aritmetica modular
 - Invariantes (de las 3 fichas en la esquina de un tablero infinito, monotonic stack)
 - Busqueda binaria
+- Principio del palomar
+- https://www.cs.utexas.edu/~EWD/transcriptions/EWD10xx/EWD1094.html
 
 ## El de prender y apagar
 
