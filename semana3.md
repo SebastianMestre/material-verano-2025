@@ -5,6 +5,7 @@
 - Busqueda binaria
 - Principio del palomar
 - https://www.cs.utexas.edu/~EWD/transcriptions/EWD10xx/EWD1094.html
+- https://www.spoj.com/problems/HISTOGRA/ (monotonic stack)
 
 ## El de prender y apagar
 
