@@ -105,7 +105,13 @@ No siempre se puede (por ejemplo si arrancas con todos Rojos, no podes intercamb
 
 <https://cses.fi/problemset/task/1754> - Coin Piles (parecido al problema de los tickets)
 
-# El del escalon
+# El de la piramide
+
+Tenes N (`<= 10^18`) monedas, queres armar una piramide donde el nivel mas alto tiene 1 moneda, el siguiente hacia abajo 2, el siguiente 3, etc. Cuál es la pirámide más alta que se puede armar?
+
+Consideremos una función f(k) que responde 1 si es posible construir k niveles y 0 si no.
+
+**Observacion:**
 
 Hay una funcion no-decreciente que cumple que f(0) = 0 y f(100) = 1. Como podemos encontrar el primer punto donde f es 1?
 
