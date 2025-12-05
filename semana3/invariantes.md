@@ -13,108 +13,6 @@ A lo largo de un proceso, podemos encontrar propiedades que se mantienen constan
 
 Este tipo de cosas pueden ser muy utiles para resolver problemas, y para entender algoritmos.
 
-## Aritmetica modular
-
-La aritmética modular es un sistema de numeración construido sobre el resto de la división.
-
-Dos números son *congruentes módulo m* si su diferencia es un múltiplo de m.
-
-```
-a ≡ b (mod m)
-sii
-a - b = k * m (para algún k entero)
-```
-
-**Si sumamos m a un número, el resultado es equivalente al número original.**
-
-La relación de congruencia módulo m es una relación de equivalencia:
-
-- Reflexiva: a ≡ a (mod m)
-- Simétrica: si a ≡ b (mod m), entonces b ≡ a (mod m)
-- Transitiva: si a ≡ b (mod m) y b ≡ c (mod m), entonces a ≡ c (mod m)
-
-Esta relación de equivalencia se comporta bien con las operaciones aritméticas básicas:
-
-```
-suponiendo
-     a ≡ b (mod m)
-     c ≡ d (mod m)
-entonces
-     a + c ≡ b + d (mod m)
-     a - c ≡ b - d (mod m)
-     a * c ≡ b * d (mod m)
-```
-
-Como caso particular:
-
-```
-     a + m ≡ a (mod m)  (por definición ≡(mod m))
-pero tambien, podemos pensarlo porque m ≡ 0 (mod m)
-     a + m ≡ a + 0 = a
-```
-
-Demostracion de la suma:
-
-```
-     a ≡ b (mod m)
-{ definición ≡(mod m) }
-  => a - b = k1 * m
-{ álgebra }
-  => a = b + k1 * m   (1)
-
-     c ≡ d (mod m)
-{ definición ≡(mod m) }
-  => c - d = k2 * m
-{ álgebra }
-  => c = d + k2 * m   (2)
-
-    a + c
-{ 1 }
-  = b + k1 * m + c
-{ 2 }
-  = b + k1 * m + d + k2 * m
-{ álgebra }
-  = (b + d) + (k1 + k2) * m
-{ definición ≡(mod m) }
-  => a + c ≡ b + d (mod m)
-```
-
-### representacion canonica
-
-Para todo entero x, existe un unico entero r en el intervalo [0, m-1] tal que x ≡ r (mod m).
-
-A este entero r le podemos llamar representacion canonica de x modulo m.
-
-En particular, si x es positivo, r es el resto de la division de x por m.
-
-Una forma comoda de trabajar con aritmetica modular es siempre mantener los numeros en su representacion canonica.
-
-> Ojo: en C++, cuando x es negativo, `x % m` no es la representacion canonica de x modulo m. (en particular, es negativo)
->
-> Podemos hacer lo siguiente:
->
-> ```c++
-> int const m = 1000000007; // muy importante que sea constante, para mejor performance
-> int canonica(int x) { return (x % m + m) % m; }
-> ```
-
-### Operaciones en representacion canonica
-
-Si siempre mantenemos los numeros en su representacion canonica, las operaciones se pueden hacer de la siguiente manera:
-
-```c++
-// igual que canonica en el intervalo [0, 2m-1], y mas rapido
-int nm(int x) { return x - m * (x >= m); }
-
-// obs: si x e y estan en el intervalo [0, m-1], entonces x + y esta en el intervalo [0, 2m-1]
-int add(int x, int y) { return nm(x + y); }
-
-// obs: si x e y estan en el intervalo [0, m-1], entonces x + m - y esta en el intervalo [0, 2m-1]
-int sub(int x, int y) { return nm(x + m - y); }
-
-// obs: x * y puede desbordar int, por lo que usamos long long
-int mul(int x, int y) { return (long long)x * y % m; }
-```
 
 ## El de prender y apagar
 
@@ -222,7 +120,7 @@ O sea, en la configuracion final, la masa total del tablero es menor a 4, pero l
 Por lo tanto, es imposible llegar a tener las tres fichas vacias.
 
 
-# El de los camaleones
+## El de los camaleones
 
 En una isla pasa lo siguiente:
 
@@ -283,77 +181,11 @@ int main() {
 }
 ```
 
-### Otro parecido
+## Otro parecido
 
 <https://cses.fi/problemset/task/1754> - Coin Piles
 
-# Invariantes en algoritmos
-
-## Logica de Hoare
-
-Una *tripleta de Hoare* (o *triple de Hoare*) es una notación usada en lógica de programas para razonar formalmente sobre la corrección de algoritmos. Se escribe de la siguiente manera:
-
-```
-{P} C {Q}
-```
-
-donde:
-- **P** es la *precondición*: una afirmación lógica sobre el estado inicial antes de ejecutar el código.
-- **C** es el *comando* o fragmento de código a ejecutar.
-- **Q** es la *postcondición*: una afirmación lógica que debe cumplirse después de ejecutar C, suponiendo que la precondición P era cierta antes de ejecutar C.
-
-La interpretación es: “Si P es verdadera antes de ejecutar C, y se ejecuta C, entonces Q será verdadera después de su ejecución (siempre que C termina)”.
-
-Esta notación es fundamental para expresar y demostrar *invariantes* dentro de bucles y programas, permitiendo razonar sobre su corrección formalmente.
-
-### composicion secuencial
-
-```
-{P} C1 {Q}
-{Q} C2 {R}
-----------------------
-{P} C1; C2 {R}
-```
-
-Supongamos que C1 es un programa que, dada la precondicion P, garantiza la postcondicion Q.
-
-Supongamos que C2 es un programa que, dada la precondicion Q, garantiza la postcondicion R.
-
-Entonces, si dada la precondicion P, se ejecuta C1 y luego C2, entonces la postcondicion R se cumple.
-
-### bucles while
-
-En lógica de Hoare, los bucles `while` se razonan usando el concepto de
-*invariante de bucle*. Un invariante de bucle es una propiedad lógica (I) que
-suponiendo que:
-
-- **Es verdadera antes de entrar al bucle.**
-- **Se mantiene tras cada iteración del bucle.**
-
-entonces podemos concluir que
-
-- **Se cumple al terminar el bucle.**
-
-Aparte, en un bucle while, la condicion del bucle se vuelve falsa al terminar el
-bucle (si fuera verdadera, el bucle no hubiera terminado).
-
-```c++
-// {I}
-while (condición) {
-  // {I && condición}
-  // ...código que debe preservar I...
-  // {I}
-}
-// {I && !condición}
-```
-
-Para demostrar la corrección de un bucle:
-
-1. Se busca un invariante I que sea **cierto antes de entrar** al bucle.
-2. Se demuestra que **si I es cierto al inicio de una iteración y la condición del bucle vale**, entonces tras ejecutar el cuerpo del bucle **I sigue siendo cierto**.
-3. Cuando el bucle termina (**condición es falsa**), **I && !condición** debe implicar la propiedad deseada o la postcondición.
-
-# El de la piramide
+## El de la piramide
 
 Tenes N (`<= 10^18`) monedas, queres armar una piramide donde el nivel mas alto
 tiene 1 moneda, el siguiente hacia abajo 2, el siguiente 3, etc. Cuál es la
@@ -385,9 +217,9 @@ Para lograrlo, tenemos el siguiente algoritmo:
 int l = 1;          // siempre f(l) = 1
 int r = 2000000000; // siempre f(r) = 0
 while (r - l > 1) {
-  m = (l + r) / 2
-  if (f(m) == 0) l = m;
-  else           r = m;
+  int m = l + (r - l) / 2;
+  if (f(m) == 1) l = m; // preservo la invariante f(l) = 1
+  else           r = m; // preservo la invariante f(r) = 0
 }
 // ahora se cumplen varias cosas:
 // - r-l == 1 (condicion de corte)
