@@ -183,9 +183,11 @@ int main() {
 
 ## Otro parecido
 
-<https://cses.fi/problemset/task/1754> - Coin Piles
+- <https://cses.fi/problemset/task/1754> - Coin Piles
 
 ## El de la piramide
+
+- <https://www.codechef.com/problems/TRICOIN> - Coins And Triangle
 
 Tenes N (`<= 10^18`) monedas, queres armar una piramide donde el nivel mas alto
 tiene 1 moneda, el siguiente hacia abajo 2, el siguiente 3, etc. Cuál es la
@@ -228,3 +230,29 @@ while (r - l > 1) {
 // O sea, r es el primer punto donde f es 1.
 cout << r << endl;
 ```
+
+
+
+## Carteles
+
+- <https://www.spoj.com/problems/HISTOGRA/> - Histogram
+
+Problema: tenés un “histograma” con `n` columnas, donde la columna `i` tiene altura `h[i]`. Querés saber cuál es el área máxima de un rectángulo que se puede formar usando **barras consecutivas** del histograma.
+
+- observacion: consideremos un rectangulo que va de desde x1 hasta x2, y
+  supongamos que su altura `h` es menor que `min(h[x1], ..., h[x2])`.
+
+  Entonces el rectangulo de x1 hasta x2 con altura h+1 es valido y mayor.
+
+- observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
+  `h = min(h[x1], ..., h[x2])`, tal que `h[x1-1] >= h`.
+
+  Entonces el rectangulo con base [x1-1, x2] y altura h es valido y mayor.
+
+- observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
+  `h = min(h[x1], ..., h[x2])`, tal que `h[x2+1] >= h`.
+
+  Entonces el rectangulo con base [x1, x2+1] y altura h es valido y mayor.
+
+O sea, cualquier rectangulo maximo debe ser "maximal" en el sentido que no se
+puede extender para arriba, izquierda o derecha.
