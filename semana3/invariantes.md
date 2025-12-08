@@ -237,22 +237,83 @@ cout << r << endl;
 
 - <https://www.spoj.com/problems/HISTOGRA/> - Histogram
 
-Problema: tenés un “histograma” con `n` columnas, donde la columna `i` tiene altura `h[i]`. Querés saber cuál es el área máxima de un rectángulo que se puede formar usando **barras consecutivas** del histograma.
+Problema: tenés un “histograma” con `n` columnas, donde la columna `i` tiene
+altura `h[i]`. Querés saber cuál es el área máxima de un rectángulo que se puede
+formar usando **barras consecutivas** del histograma.
 
 - observacion: consideremos un rectangulo que va de desde x1 hasta x2, y
-  supongamos que su altura `h` es menor que `min(h[x1], ..., h[x2])`.
+  supongamos que su altura `h` es menor que `min(h[x1], ..., h[x2-1])`.
 
   Entonces el rectangulo de x1 hasta x2 con altura h+1 es valido y mayor.
 
 - observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
-  `h = min(h[x1], ..., h[x2])`, tal que `h[x1-1] >= h`.
+  `h = min(h[x1], ..., h[x2-1])`, tal que `h[x1-1] >= h`.
 
   Entonces el rectangulo con base [x1-1, x2] y altura h es valido y mayor.
 
 - observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
-  `h = min(h[x1], ..., h[x2])`, tal que `h[x2+1] >= h`.
+  `h = min(h[x1], ..., h[x2-1])`, tal que `h[x2] >= h`.
 
   Entonces el rectangulo con base [x1, x2+1] y altura h es valido y mayor.
 
 O sea, cualquier rectangulo maximo debe ser "maximal" en el sentido que no se
 puede extender para arriba, izquierda o derecha.
+
+- observacion: Hay a lo sumo N rectangulos maximales.
+
+  Demostración: Consideremos para cada columna `x`, el rectangulo maximal cuya
+  base la contiene y tiene altura `h[x]`. Este es único (imaginate arrancar
+  con la base `[x, x+1]` y altura `h[x]` y extenderlo hacia la derecha y hacia la
+  izquierda hasta que no se pueda mas).
+
+  Esto necesariamente genera a todos los rectangulos maximales. (Si no,
+  existiría un rectángulo maximal cuya altura no es igual al mínimo de las
+  alturas que cubre horizontalmente.)
+
+  Como hay N posiciones, hay a lo sumo N rectángulos maximales.
+
+¿Podremos recorrer todos los rectángulos maximales y tomar el máximo?
+
+- Idea de algoritmo: barremos de izquierda a derecha, y en cada momento
+  intentamos detectar los rectángulos maximales cuyo borde derecho es la
+  posición actual.
+
+- Si una posición `x` es el borde derecho de un rectángulo maximal, entonces
+  `h[x]` es menor que `h[x-1]`. (Si no, podríamos extenderlo más a la derecha.)
+
+¿Qué pasa con el borde izquierdo?
+
+- Imaginate comenzar con el rectángulo de base `[x-1, x]` y altura `h[x-1]`, e
+  ir extendiendolo hacia la izquierda. A medida que lo hacemos, tenemos que
+  reducir la altura del rectángulo.
+
+  Justo antes de cada reducción de altura, tenemos un borde izquierdo válido.
+
+- Eventualmente, llegaremos a una posición donde la altura es menor que `h[x]`.
+
+  Entonces, el rectángulo se podría nuevamente extender hacia la **derecha**,
+  por lo que `x` no sería el borde derecho de un rectángulo maximal con ese
+  borde izquierdo y esa altura.
+
+- **IDEA DE LA PILA MONOTONA**
+
+Vamos de derecha a izquierda. En cada momento nos interesa tener una estructura
+de datos con los potenciales bordes izquierdos y alturas de los rectángulos
+maximales.
+
+Para esto, usamos una pila.
+
+Cuando llegamos a una posición `x`, la pila contiene los potenciales bordes
+izquierdos y alturas de los rectángulos maximales con borde derecho `x`.
+
+Ahora podemos iterar por ellos, de derecha a izquierda, siempre que la altura no
+sea menor que `h[x]`.
+
+Ahora, agregamos la columna `x` a la pila.
+
+Pero cualquier rectángulo que con borde izquierdo previo a `x`, altura mayor a
+`h[x]`, y borde derecho posterior a `x`, no es válido, porque se saldría del
+histograma. Entonces, borramos todos esos rectángulos de la pila.
+
+Ahora, la pila contiene los potenciales bordes izquierdos y alturas de los
+rectángulos maximales con borde derecho `x+1`.
