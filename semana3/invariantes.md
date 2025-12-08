@@ -241,30 +241,26 @@ Problema: tenés un “histograma” con `n` columnas, donde la columna `i` tien
 altura `h[i]`. Querés saber cuál es el área máxima de un rectángulo que se puede
 formar usando **barras consecutivas** del histograma.
 
-- observacion: consideremos un rectangulo que va de desde x1 hasta x2, y
-  supongamos que su altura `h` es menor que `min(h[x1], ..., h[x2-1])`.
+- **observación:** el rectangulo maximo debe ser "maximal" en el sentido que no
+  se puede extender para arriba, izquierda o derecha.
 
-  Entonces el rectangulo de x1 hasta x2 con altura h+1 es valido y mayor.
+  **Demostración**: consideremos un rectangulo con base `[x1, x2]` y altura `h`.
 
-- observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
-  `h = min(h[x1], ..., h[x2-1])`, tal que `h[x1-1] >= h`.
+  - Si suponemos que `h < min(h[x1], ..., h[x2-1])`, entonces el rectangulo con
+    igual base y altura `h+1` es valido y mayor.
 
-  Entonces el rectangulo con base [x1-1, x2] y altura h es valido y mayor.
+  - Si suponemos que `h = min(h[x1], ..., h[x2-1])` y `h[x1-1] >= h`, entonces el
+    rectangulo con base `[x1-1, x2]` y altura `h` es valido y mayor.
 
-- observacion: consideremos un rectangulo que va de x1 hasta x2, con altura
-  `h = min(h[x1], ..., h[x2-1])`, tal que `h[x2] >= h`.
+  - Si suponemos que `h = min(h[x1], ..., h[x2-1])` y `h[x2] >= h`, entonces el
+    rectangulo con base `[x1, x2+1]` y altura `h` es valido y mayor.
 
-  Entonces el rectangulo con base [x1, x2+1] y altura h es valido y mayor.
+- **observación:** Hay a lo sumo N rectangulos maximales.
 
-O sea, cualquier rectangulo maximo debe ser "maximal" en el sentido que no se
-puede extender para arriba, izquierda o derecha.
-
-- observacion: Hay a lo sumo N rectangulos maximales.
-
-  Demostración: Consideremos para cada columna `x`, el rectangulo maximal cuya
-  base la contiene y tiene altura `h[x]`. Este es único (imaginate arrancar
-  con la base `[x, x+1]` y altura `h[x]` y extenderlo hacia la derecha y hacia la
-  izquierda hasta que no se pueda mas).
+  **Demostración:** Consideremos para cada columna `x`, el rectangulo maximal
+  cuya base la contiene y tiene altura `h[x]`. Este es único (imaginate arrancar
+  con la base `[x, x+1]` y altura `h[x]` y extenderlo hacia la derecha y hacia
+  la izquierda hasta que no se pueda mas).
 
   Esto necesariamente genera a todos los rectangulos maximales. (Si no,
   existiría un rectángulo maximal cuya altura no es igual al mínimo de las
