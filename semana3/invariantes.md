@@ -291,25 +291,28 @@ formar usando **barras consecutivas** del histograma.
   por lo que `x` no sería el borde derecho de un rectángulo maximal con ese
   borde izquierdo y esa altura.
 
-- **IDEA DE LA PILA MONOTONA**
+### IDEA DE LA PILA MONOTONA
 
 Vamos de derecha a izquierda. En cada momento nos interesa tener una estructura
 de datos con los potenciales bordes izquierdos y alturas de los rectángulos
 maximales.
 
-Para esto, usamos una pila.
-
-Cuando llegamos a una posición `x`, la pila contiene los potenciales bordes
-izquierdos y alturas de los rectángulos maximales con borde derecho `x`.
+Cuando llegamos a una posición `x`, la estructura contiene los potenciales
+bordes izquierdos y alturas de los rectángulos maximales con borde derecho `x`.
 
 Ahora podemos iterar por ellos, de derecha a izquierda, siempre que la altura no
 sea menor que `h[x]`.
 
-Ahora, agregamos la columna `x` a la pila.
+Ahora, actualizamos la estructura, para considerar los rectangulos con borde
+`x+1`, para lo cual agregamos la columna `x` a la estructura.
 
 Pero cualquier rectángulo que con borde izquierdo previo a `x`, altura mayor a
 `h[x]`, y borde derecho posterior a `x`, no es válido, porque se saldría del
 histograma. Entonces, borramos todos esos rectángulos de la pila.
 
-Ahora, la pila contiene los potenciales bordes izquierdos y alturas de los
-rectángulos maximales con borde derecho `x+1`.
+**observación**: los rectangulos que borramos son exactamente los que
+consideramos como opcion en el paso anterior (esto garantiza que cada uno se
+considera una sola vez, y da la eficiencia del algoritmo)
+
+Resulta que el orden de insercion de izquierda a derecha, y que siempre borramos
+un conjunto de rectangulos de mas a la izquierda, nos permite usar una pila.
