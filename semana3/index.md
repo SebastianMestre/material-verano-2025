@@ -6,3 +6,5 @@
 - Invariantes              [notas](invariantes) [presentacion](invariantes.pdf)
 
 ## Adjuntos
+
+- [histogra.cpp](attachments/histogra.cpp)
