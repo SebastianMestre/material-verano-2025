@@ -1,0 +1,256 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegray}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{gray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  language=C++
+}
+
+\lstset{style=customc}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+\usetheme{Madrid}
+
+\title{Lógica de Hoare}
+\author{Sebastian Mestre}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Trípletas de Hoare}
+
+\begin{frame}{¿Qué es una trípleta de Hoare?}
+  \begin{itemize}
+    \item La \textbf{lógica de Hoare} es una forma de razonar formalmente sobre la corrección de programas.
+    \item Una \textbf{trípeta de Hoare} se escribe:
+      \[
+        \{P\}\ C\ \{Q\}
+      \]
+      donde:
+      \begin{itemize}
+        \item \(P\): \textbf{precondición}, afirmación lógica sobre el estado antes de ejecutar el código.
+        \item \(C\): \textbf{comando} o fragmento de código.
+        \item \(Q\): \textbf{postcondición}, afirmación lógica sobre el estado después de ejecutar \(C\).
+      \end{itemize}
+    \item Lectura: \textbf{“Si \(P\) es verdadera antes de ejecutar \(C\) y se ejecuta \(C\), entonces \(Q\) será verdadera al finalizar”}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo simple}
+  \begin{itemize}
+    \item Consideremos el fragmento:
+  \end{itemize}
+  \begin{block}{Programa}
+  \begin{lstlisting}[style=customc]
+x = x * 6;
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item El mismo programa puede aparecer en \textbf{muchas} trípletas válidas, según la propiedad que nos interese:
+  \end{itemize}
+  \begin{block}{Algunos ejemplos}
+  \[
+    \{\, x \% 2 == 1 \,\}\ x = x * 6;\ \{\, x \% 2 == 1 \,\}
+  \]
+  \[
+    \{\, x \% 2 == 0 \,\}\ x = x * 6;\ \{\, x \% 2 == 0 \,\}
+  \]
+  \[
+    \{\, x \% 2 == 0 \,\}\ x = x * 6;\ \{\, x \% 4 == 0 \,\}
+  \]
+  \[
+    \{\, x > 16 \,\}\ x = x * 6;\ \{\, x > 96 \,\}
+  \]
+  \end{block}
+\end{frame}
+
+\begin{frame}{Precondición más débil}
+  \begin{itemize}
+    \item Fijada una \textbf{postcondición} \(Q\) y un programa \(C\), hay muchas precondiciones \(P\) tales que:
+      \[
+        \{P\}\ C\ \{Q\}
+      \]
+    \item La \textbf{precondición más débil} es aquella \(P_{\text{mín}}\) que es implicada por cualquier otra precondición que garantice \(Q\).
+    \item Intuitivamente: es la condición “mínima” que asegura que, tras ejecutar el programa, la postcondición se cumple.
+  \end{itemize}
+  \begin{block}{Ejemplo}
+    Para el programa \(x = x * 6\) y la postcondición
+    \[
+      x \% 12 == 0,
+    \]
+    una precondición más débil adecuada es:
+    \[
+      x \% 2 == 0.
+    \]
+    Entonces:
+    \[
+      \{\, x \% 2 == 0 \,\}\ x = x * 6;\ \{\, x \% 12 == 0 \,\}.
+    \]
+  \end{block}
+\end{frame}
+
+\begin{frame}{Cómo se usa en la práctica}
+  \begin{itemize}
+    \item En teoría existen reglas para calcular (semi-automáticamente) la precondición más débil de una postcondición dada.
+    \item En la práctica:
+      \begin{itemize}
+        \item Se arranca desde la \textbf{postcondición deseada} al final del programa.
+        \item Se van propagando hacia atrás las \textbf{condiciones necesarias} para que esa postcondición se cumpla.
+        \item Si en algún punto podemos garantizar una precondición \textbf{más fuerte} que la mínima requerida, no hay problema.
+      \end{itemize}
+    \item El concepto dual de \textbf{postcondición más fuerte} existe, pero es mucho más difícil de calcular y casi no se usa.
+  \end{itemize}
+\end{frame}
+
+\section{Reglas de composición}
+
+\begin{frame}{Composición secuencial}
+  \begin{itemize}
+    \item Una regla básica de la lógica de Hoare es la \textbf{composición secuencial}.
+  \end{itemize}
+  \begin{block}{Regla}
+    Si
+    \[
+      \{P\}\ C_1\ \{Q\}
+      \quad\text{y}\quad
+      \{Q\}\ C_2\ \{R\},
+    \]
+    entonces
+    \[
+      \{P\}\ C_1; C_2\ \{R\}.
+    \]
+  \end{block}
+  \begin{itemize}
+    \item Interpretación informal:
+      \begin{itemize}
+        \item \(C_1\) transforma estados con \(P\) en estados con \(Q\).
+        \item \(C_2\) transforma estados con \(Q\) en estados con \(R\).
+        \item Por lo tanto, ejecutar primero \(C_1\) y luego \(C_2\) transforma estados con \(P\) en estados con \(R\).
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Bucles e invariantes}
+
+\begin{frame}{Bucle \texttt{while} e invariantes}
+  \begin{itemize}
+    \item Para razonar sobre un bucle \texttt{while} usamos un \textbf{invariante de bucle} \(I\).
+    \item Un invariante es una propiedad lógica que:
+      \begin{itemize}
+        \item Es verdadera antes de entrar al bucle.
+        \item Se mantiene tras cada iteración.
+        \item Sigue siendo verdadera cuando el bucle termina.
+      \end{itemize}
+    \item Además, cuando el bucle termina, la \textbf{condición del while es falsa}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Esquema de razonamiento para \texttt{while}}
+  \begin{block}{Esquema}
+  \begin{lstlisting}[style=customc]
+// {I}
+while (condicion) {
+  // {I && condicion}
+  // ...codigo que debe preservar I...
+  // {I}
+}
+// {I && !condicion}
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Para demostrar la corrección:
+      \begin{enumerate}
+        \item Encontrar un invariante \(I\) que sea cierto antes de entrar al bucle.
+        \item Probar que si \(I\) es cierto al inicio de una iteración y la condición es verdadera, entonces tras el cuerpo del bucle \(I\) sigue siendo cierto.
+        \item Al terminar el bucle, usar \(I \land \neg\text{condición}\) para implicar la postcondición deseada.
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\section{En la práctica competitiva}
+
+\begin{frame}{Lógica de Hoare en la vida real}
+  \begin{itemize}
+    \item En programación competitiva \textbf{no} escribimos demostraciones formales en notación de Hoare.
+    \item Pero los conceptos fundamentales sí se usan todo el tiempo:
+      \begin{itemize}
+        \item \textbf{Invariantes} de estructuras de datos y bucles.
+        \item \textbf{Precondiciones} de funciones y rutinas auxiliares.
+        \item \textbf{Postcondiciones} que queremos garantizar al terminar un algoritmo.
+      \end{itemize}
+    \item Ejemplos típicos:
+      \begin{itemize}
+        \item “Al inicio de cada iteración, los primeros \(k\) elementos están ordenados”.
+        \item “Al entrar al bucle, \texttt{res} contiene el resultado parcial correcto hasta ahora”.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Más allá de los bucles}
+  \begin{itemize}
+    \item El razonamiento con invariantes se usa también en:
+      \begin{itemize}
+        \item Recursiones: qué “promesa” cumple cada llamada recursiva.
+        \item Ecuaciones y desigualdades en problemas matemáticos.
+        \item Recorridos no triviales sobre arreglos y grafos.
+      \end{itemize}
+    \item Muchas veces “sentimos” que un algoritmo es correcto porque identificamos claramente:
+      \begin{itemize}
+        \item Qué se mantiene invariante.
+        \item Qué precondiciones necesita cada paso.
+        \item Qué postcondición queremos al final.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section*{Cierre}
+
+\begin{frame}{Ideas clave}
+  \begin{itemize}
+    \item La lógica de Hoare da un \textbf{lenguaje formal} para hablar de precondiciones, postcondiciones e invariantes.
+    \item Aunque no se use la notación completa en concursos, la forma de pensar sí está profundamente influenciada por estas ideas.
+    \item Adoptar este estilo de razonamiento es clave para escribir algoritmos correctos y poder justificar por qué funcionan.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preguntas}
+  \centering
+  \Huge
+  \textbf{Q\&A}
+\end{frame}
+
+\end{document}
+
+
