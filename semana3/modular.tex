@@ -1,0 +1,280 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegray}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{gray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  language=C++
+}
+
+\lstset{style=customc}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+\usetheme{Madrid}
+
+\title{Aritmética modular}
+\author{Sebastian Mestre}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Aritmética modular}
+
+\begin{frame}{¿Qué es la aritmética modular?}
+  \begin{itemize}
+    \item Sistema de numeración construido sobre el \textbf{resto} de la división.
+    \item Dos números son \textbf{congruentes módulo \(m\)} si su diferencia es un múltiplo de \(m\).
+  \end{itemize}
+  \begin{block}{Definición}
+    Dados enteros \(a,b\) y \(m \ge 1\),
+    \[
+      a \equiv b \pmod m
+      \quad \Leftrightarrow \quad
+      a - b = k \cdot m \text{ para algún } k \in \mathbb{Z}.
+    \]
+  \end{block}
+  \begin{itemize}
+    \item En particular, sumar \(m\) no cambia la clase:
+      \[
+        a + m \equiv a \pmod m.
+      \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Propiedades de la congruencia}
+  \begin{itemize}
+    \item La relación \(\equiv \pmod m\) es una \textbf{relación de equivalencia}:
+      \begin{itemize}
+        \item Reflexiva: \(a \equiv a \pmod m\).
+        \item Simétrica: si \(a \equiv b \pmod m\), entonces \(b \equiv a \pmod m\).
+        \item Transitiva: si \(a \equiv b \pmod m\) y \(b \equiv c \pmod m\), entonces \(a \equiv c \pmod m\).
+      \end{itemize}
+    \item Se comporta bien con las operaciones básicas:
+      \[
+        \begin{aligned}
+          a &\equiv b \pmod m \\
+          c &\equiv d \pmod m
+        \end{aligned}
+        \quad \Rightarrow \quad
+        \begin{cases}
+          a + c \equiv b + d \pmod m,\\
+          a - c \equiv b - d \pmod m,\\
+          a \cdot c \equiv b \cdot d \pmod m.
+        \end{cases}
+      \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Clases de equivalencia}
+  \begin{itemize}
+    \item Para cada entero \(a\), consideramos el conjunto de todos los números congruentes con \(a\) módulo \(m\).
+    \item Este conjunto se llama \textbf{clase de equivalencia} de \(a\) módulo \(m\):
+      \[
+        [a] = \{\, b \in \mathbb{Z} \mid b \equiv a \pmod m \,\}.
+      \]
+  \end{itemize}
+  \begin{block}{Ejemplo: \(m = 5\)}
+    \[
+    \begin{aligned}
+      [0] &= \{\dots, -5, 0, 5, 10, 15, \dots\}\\
+      [1] &= \{\dots, -4, 1, 6, 11, 16, \dots\}\\
+      [2] &= \{\dots, -3, 2, 7, 12, 17, \dots\}\\
+      [3] &= \{\dots, -2, 3, 8, 13, 18, \dots\}\\
+      [4] &= \{\dots, -1, 4, 9, 14, 19, \dots\}
+    \end{aligned}
+    \]
+    Notar que \([5] = [0]\), es la misma clase.
+  \end{block}
+\end{frame}
+
+\begin{frame}{El conjunto \( \mathbb{Z}_m \)}
+  \begin{itemize}
+    \item Hay exactamente \(m\) clases de equivalencia módulo \(m\):
+      \[
+        [0], [1], \dots, [m-1].
+      \]
+    \item Al conjunto de estas clases se lo denota típicamente por \(\mathbb{Z}_m\):
+      \[
+        \mathbb{Z}_m = \{ [0], [1], \dots, [m-1] \}.
+      \]
+    \item Como la suma, la resta y el producto \textbf{respetan} la congruencia, podemos definir operaciones entre clases:
+      \[
+        [x] + [y] = [x + y],\quad
+        [x] - [y] = [x - y],\quad
+        [x] \cdot [y] = [x \cdot y].
+      \]
+  \end{itemize}
+\end{frame}
+
+\section{Representación canónica}
+
+\begin{frame}{Representación canónica}
+  \begin{itemize}
+    \item Para todo entero \(x\), existe un único entero \(r \in [0, m-1]\) tal que
+      \[
+        x \equiv r \pmod m.
+      \]
+    \item A este \(r\) lo llamamos \textbf{representación canónica} de \(x\) módulo \(m\).
+    \item Si \(x\) es positivo, \(r\) es simplemente el resto de dividir \(x\) por \(m\).
+    \item Es muy cómodo trabajar siempre con los números en su representación canónica.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Cuidado con \texttt{\%} en C++}
+  \begin{itemize}
+    \item En C++, cuando \(x\) es negativo, \texttt{x \% m} \textbf{no} da la representación canónica (puede ser negativa).
+    \item Podemos corregirlo de forma estándar:
+  \end{itemize}
+  \begin{block}{Función de representación canónica}
+  \begin{lstlisting}[style=customc]
+int const m = 1000000007; // muy importante que sea constante
+
+int canonica(int x) {
+  return (x % m + m) % m;
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{Operaciones básicas}
+
+\begin{frame}[fragile]{Operaciones en representación canónica}
+  \begin{itemize}
+    \item Si mantenemos todos los números en \([0, m-1]\), las operaciones básicas se pueden implementar de forma segura.
+    \item Truco: una versión más rápida que \texttt{canonica} cuando sabemos que el resultado está en \([0, 2m-1]\).
+  \end{itemize}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+// igual que canonica en el intervalo [0, 2m-1], y más rápido
+int nm(int x) {
+  return x - m * (x >= m);
+}
+
+// si x e y están en [0, m-1], x + y está en [0, 2m-1]
+int add(int x, int y) {
+  return nm(x + y);
+}
+
+// si x e y están en [0, m-1], x + m - y está en [0, 2m-1]
+int sub(int x, int y) {
+  return nm(x + m - y);
+}
+
+// cuidado: x * y puede desbordar int, usamos long long
+int mul(int x, int y) {
+  return (long long)x * y % m;
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{Otras operaciones}
+
+\begin{frame}[fragile]{Potenciación modular}
+  \begin{itemize}
+    \item Necesitamos calcular \(x^y \bmod m\) muchas veces en programación competitiva.
+    \item Usamos \textbf{exponenciación binaria} para obtener costo \(O(\log y)\).
+  \end{itemize}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+// O(log y)
+int pot(int x, int y) {
+  if (y == 0) return 1;
+  if (y % 2 == 0) return pot(mul(x, x), y / 2);
+  return mul(x, pot(x, y - 1));
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Inverso multiplicativo}
+  \begin{itemize}
+    \item Si \(m\) es primo, podemos usar el \textbf{pequeño teorema de Fermat}:
+      \[
+        x^{m-1} \equiv 1 \pmod m \quad \Rightarrow \quad
+        x^{m-2} \equiv x^{-1} \pmod m.
+      \]
+    \item Entonces, el inverso multiplicativo se puede calcular en \(O(\log m)\).
+  \end{itemize}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+int inv(int x) {
+  return pot(x, m - 2);
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Trucos con inversos y factoriales}
+  \begin{itemize}
+    \item A veces queremos todos los inversos \(1, 2, \dots, n\) en \(O(n)\).
+    \item También es común precomputar factoriales y sus inversos para combinatoria.
+  \end{itemize}
+  \begin{block}{Implementaciones típicas}
+  \begin{lstlisting}[style=customc]
+int inv[n + 1];
+inv[1] = 1;
+for (int i = 2; i <= n; i++) {
+  inv[i] = mul(inv[m % i], m - m / i);
+}
+
+int fac[n + 1], ifac[n + 1];
+fac[0] = 1;
+forn(i, n) fac[i + 1] = mul(fac[i], i + 1);  // factoriales
+ifac[n] = inv(fac[n]);
+dforn(i, n) ifac[i] = mul(ifac[i + 1], i + 1); // inversos factoriales
+forr(i, 1, n) inv[i] = mul(ifac[i], fac[i - 1]); // inversos 1..n
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section*{Cierre}
+
+\begin{frame}{Ideas clave}
+  \begin{itemize}
+    \item La aritmética modular trabaja con clases de equivalencia definidas por el resto módulo \(m\).
+    \item Mantener siempre la \textbf{representación canónica} simplifica las implementaciones y evita errores.
+    \item Con operaciones básicas (\texttt{add}, \texttt{sub}, \texttt{mul}, \texttt{pot}, \texttt{inv}) podemos resolver muchos problemas de combinatoria y conteo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preguntas}
+  \centering
+  \Huge
+  \textbf{Q\&A}
+\end{frame}
+
+\end{document}
+
+

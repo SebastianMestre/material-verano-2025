@@ -67,17 +67,58 @@ Demostracion de la suma:
   => a + c ≡ b + d (mod m)
 ```
 
-### representacion canonica
+### Clases de equivalencia
 
-Para todo entero x, existe un unico entero r en el intervalo [0, m-1] tal que x ≡ r (mod m).
+Para cada entero a, hay un conjunto de numeros que son congruentes con a modulo
+m. Este conjunto se llama clase de equivalencia de a modulo m.
+
+```
+[a] = { b | b ≡ a (mod m) }
+```
+
+Por ejemplo, si m = 5, entonces:
+
+```
+[0] = { ..., -5, 0, 5, 10, 15, ... }
+[1] = { ..., -4, 1, 6, 11, 16, ... }
+[2] = { ..., -3, 2, 7, 12, 17, ... }
+[3] = { ..., -2, 3, 8, 13, 18, ... }
+[4] = { ..., -1, 4, 9, 14, 19, ... }
+[5] = { ..., 0, 5, 10, 15, 20, ... }    (mismo conjunto que [0])
+```
+
+Hay en total m clases de equivalencia modulo m. ([0], [1], ..., [m-1])
+
+Al conjunto de clases de equivalencia modulo m, se lo suele llamar Z_m (Z sub m).
+
+```
+Z_m = {[0], [1], ..., [m-1]}
+```
+
+Lo que vimos antes, que la suma, diferencia y producto se "portan bien" con la
+equivalencia en modulo, nos permite definir operaciones de suma entre clases de
+equivalencia, y resulta tal que:
+
+```
+[x] + [y] = [x + y]
+[x] - [y] = [x - y]
+[x] * [y] = [x * y]
+```
+
+### Representacion canonica
+
+Para todo entero x, existe exactamente un elemento en su clase de equivalencia
+que se encuentra en el intervalo [0, m-1].
 
 A este entero r le podemos llamar representacion canonica de x modulo m.
 
 En particular, si x es positivo, r es el resto de la division de x por m.
 
-Una forma comoda de trabajar con aritmetica modular es siempre mantener los numeros en su representacion canonica.
+Una forma comoda de trabajar con aritmetica modular es siempre mantener los
+numeros en su representacion canonica.
 
-> Ojo: en C++, cuando x es negativo, `x % m` no es la representacion canonica de x modulo m. (en particular, es negativo)
+> Ojo: en C++, cuando x es negativo, `x % m` no es la representacion canonica de
+> x modulo m. (en particular, es negativo)
 >
 > Podemos hacer lo siguiente:
 >
