@@ -177,25 +177,14 @@ int canonica(int x) {
   \begin{block}{Implementación}
   \begin{lstlisting}[style=customc]
 // igual que canonica en el intervalo [0, 2m-1], y más rápido
-int nm(int x) {
-  return x - m * (x >= m);
-}
+int nm(int x) {  return x - m * (x >= m); }
 
-// si x e y están en [0, m-1], x + y está en [0, 2m-1]
-int add(int x, int y) {
-  return nm(x + y);
-}
+int add(int x, int y) { return nm(x + y); }
 
-// si x e y están en [0, m-1], x + m - y está en [0, 2m-1]
-int sub(int x, int y) {
-  return nm(x + m - y);
-}
+int sub(int x, int y) {  return nm(x + m - y);}
 
 // cuidado: x * y puede desbordar int, usamos long long
-int mul(int x, int y) {
-  return (long long)x * y % m;
-}
-  \end{lstlisting}
+int mul(int x, int y) {  return (long long)x * y % m; }\end{lstlisting}
   \end{block}
 \end{frame}
 
@@ -276,5 +265,3 @@ forr(i, 1, n) inv[i] = mul(ifac[i], fac[i - 1]); // inversos 1..n
 \end{frame}
 
 \end{document}
-
-
