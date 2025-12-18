@@ -230,6 +230,103 @@ Tipicos problemas de poner fichitas en un tablero.
 > <https://codeforces.com/contest/143/problem/E>
 
 
+Este problema tiene varias cosas interesantes.
+
+
+Consiste en y poniendo y sacando tractores, mientras que en cada paso nos
+aseguramos de que no se solapen entre si.
+
+Implementativamente, esta ayuda bastante escribir funciones auxiliares para
+poner y sacar tractores, y para verificar si una posicion es valida. Esto es
+programacion competitiva, pero no seamos salvajes.
+
+```cpp
+int go(int p) {
+    if (p == n*m) return cnt;
+
+    int const i = p / m, j = p % m;
+
+    int ans = cnt;
+    forn(r, 4) {
+        if (!ok(i, j, r)) continue;
+        poner(i, j, r, cnt+1); cnt++;
+        ans = max(ans, go(p+1));
+        sacar(i, j, r); cnt--;
+    }
+    ans = max(ans, go(p+1));
+
+    return ans;
+}
+```
+
+Aparte, el problema pide devolver la configuracion que logra la cantidad maxima
+de tractores, no solo la cantidad. Para esto resulta util tener variables
+globales que guarden la mejor configuracion encontrada y su puntaje.
+
+```cpp
+int best = 0;
+int best_board[maxn][maxn];
+int go(int p) {
+    if (p == n*m) return cnt;
+
+    int const i = p / m, j = p % m;
+    
+    int ans = cnt;
+    forn(r, 4) {
+        if (!ok(i, j, r)) continue;
+        poner(i, j, r, cnt+1); cnt++;
+        ans = max(ans, go(p+1));
+        sacar(i, j, r); cnt--;
+    }
+    ans = max(ans, go(p+1));
+    
+    if (ans > best) {
+        best = ans;
+        memcpy(best_board, board, sizeof(board));
+    }
+
+    return ans;
+}
+```
+
+El problema es que esta implementacion es muy ineficiente.
+
+Para la grilla de 8x8 esta implementacion ya tarda 10 segundos.
+
+El truco es el siguiente: Si sabemos que en la rama actual es imposible obtener
+una solucion mejor que la mejor solucion conocida hasta el momento, podemos
+podar la rama.
+
+```cpp
+int go(int p) {
+    if (p == n*m) return cnt;
+
+    // calclulo una cota superior de la mejor solucion posible en la rama actual
+    int rem = 0;
+    forr(q, p, n*m) rem += (tablero[q/m][q%m] == 0);
+    int opt = cnt + rem / 5;
+    if (opt <= best) return opt; // si no hay posibilidad de mejorar la mejor solucion encontrada, no exploramos mas
+
+    int const i = p / m, j = p % m;
+    
+    int ans = cnt;
+    forn(r, 4) {
+        if (!ok(i, j, r)) continue;
+        poner(i, j, r, cnt+1); cnt++;
+        ans = max(ans, go(p+1));
+        sacar(i, j, r); cnt--;
+    }
+    ans = max(ans, go(p+1));
+    
+    if (ans > best) {
+        best = ans;
+        memcpy(best_tablero, tablero, sizeof(tablero));
+    }
+
+    return ans;
+}
+```
+
 > Situado en el año 2021: Hay una sala de cine de M filas. La i-esima fila tiene
 > i asientos.
 >
