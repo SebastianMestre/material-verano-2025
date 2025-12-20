@@ -498,21 +498,16 @@ bool go(int i) {
   forn(j, n) idx[j] = j;
   random_shuffle(idx, idx + n);
   for (int j : idx) {
-    if (c[j] || d1[i + j] || d2[i - j + n]) continue;
-    c[j] = d1[i + j] = d2[i - j + n] = true;
-    col[i] = j;
-    if (go(i + 1)) return true;
-    c[j] = d1[i + j] = d2[i - j + n] = false;
+     ...
   }
   return false;
-}
-  \end{lstlisting}
+}\end{lstlisting}
   \end{block}
 \end{frame}
 
 \begin{frame}{Resumen}
   \begin{itemize}
-    \item La \textbf{búsqueda exhaustiva} (fuerza bruta) es una herramienta poderosa para \(N\) chico.
+    \item La \textbf{búsqueda exhaustiva} (fuerza bruta) es simple, \textbf{si se implementa bien}.
     \item Técnicas clave:
       \begin{itemize}
         \item bitmasks para subconjuntos,
