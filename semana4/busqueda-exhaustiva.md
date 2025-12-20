@@ -49,7 +49,54 @@ do {
 
 Esta técnica sirve cuando necesitamos probar todos los órdenes posibles de un conjunto pequeño (típicamente \(n \leq 10\)).
 
+- <https://codeforces.com/contest/431/problem/B>
+
+> Hay 5 estudiantes que esperan en fila para usar una ducha. Mientras esperan,
+> conversan por pares: el primero con el segundo, el tercero con el cuarto, y el
+> quinto queda solo. Cada vez que alguien entra a la ducha, la fila se acorta y
+> se vuelven a formar pares de conversación entre los que quedan. Cada
+> conversación entre los estudiantes `i` y `j` aumenta la felicidad de ambos
+> según una matriz `g[i][j]`.
+>
+> Encontrar el orden inicial de los 5 estudiantes en la fila que maximiza la
+> felicidad total acumulada al final.
+
+Resolvemos por fuerza bruta, costo `O(N! * N^2)`.
+
+```cpp
+int const n = 5;
+int g[n][n];
+int main() {
+    forn(i, n) forn(j, n) cin >> g[i][j];
+    int p[] = {0, 1, 2, 3, 4};
+    ll best = 0;
+    do {
+        ll happiness = 0;
+        forn(i, n) {
+            for (int j = i+1; j < n; j += 2) {
+                happiness += g[p[j-1]][p[j]] + g[p[j]][p[j-1]];
+            }
+        }
+        best = max(best, happiness);
+    } while (next_permutation(p, p+n));
+    cout << best << endl;
+}
+```
+
+No hace falta hacer optimizaciones adicionales, porque N=5. (`O(N! * N^2)` entra
+hasta N=9), pero se puede:
+
+- Optimizar el bucle interno a `O(N)` calculando la cantidad de veces que
+  aparece cada par en el proceso. No ayuda mucho, quizas llegue hasta N=11.
+
+- Optimizar todo a `O(2^N * N)` usando DP sobre el subconjunto de estudiantes
+  que ya han entrado a la ducha. Puede llegar hasta N=20.
+
+Otro problema: <https://atcoder.jp/contests/abc221/tasks/abc221_c>
+
 ### Fuerza bruta recursiva: problema de las N reinas
+
+<https://cses.fi/problemset/task/1624>
 
 La fuerza bruta recursiva construye soluciones paso a paso, probando todas las
 opciones posibles. En el problema de **N reinas** (por ejemplo,
