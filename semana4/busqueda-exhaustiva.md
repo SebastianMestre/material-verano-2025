@@ -1,8 +1,18 @@
-## Semana 4
+# Fuerza bruta
 
-En esta semana vemos técnicas de **búsqueda exhaustiva** (fuerza bruta) y cómo mejorarlas mediante **backtracking** y **branch & bound**.
+Los problemas con entrada pequeña (e.g. N < 20) se pueden resolver probando
+todas las posibilidades (fuerza bruta).
 
-### Fuerza bruta sobre subconjuntos (bitmasks)
+En esta clase veremos cómo implementar esas soluciones eficientemente y varios
+trucos para escribir poco código. Esto parece trivial, pero muchos equipos se
+complican demasiado al implementar y no logran resolver estos problemas.
+
+Aprender trucos para acortar y simplificar código es esencial, y la mejor forma
+de hacerlo es estudiando soluciones de otros competidores, a problemas que ya
+resolvimos. (Especialmente en competencias en linea, donde participan los
+mejores del mundo.)
+
+## Fuerza bruta sobre subconjuntos (bitmasks)
 
 Para un conjunto de \(n\) elementos, cada subconjunto puede representarse con un entero de \(0\) a \(2^n-1\), donde el bit \(i\) indica si el elemento \(i\) está presente.
 Esto permite iterar todos los subconjuntos con un simple ciclo:
@@ -35,7 +45,7 @@ forn(mk, 1 << n) {
 cout << best << endl;
 ```
 
-### Permutaciones usando `next_permutation`
+## Permutaciones usando `next_permutation`
 
 Otra forma de fuerza bruta es recorrer **todas las permutaciones** de un arreglo.
 En C++ la función `std::next_permutation` genera la siguiente permutación lexicográfica:
@@ -94,7 +104,7 @@ hasta N=9), pero se puede:
 
 Otro problema: <https://atcoder.jp/contests/abc221/tasks/abc221_c>
 
-### Fuerza bruta recursiva: problema de las N reinas
+## Fuerza bruta recursiva: problema de las N reinas
 
 <https://cses.fi/problemset/task/1624>
 
@@ -191,7 +201,7 @@ bool reinas(int n) {
 }
 ```
 
-### Backtracking: N reinas con poda
+# Backtracking
 
 El **backtracking** mejora la fuerza bruta recursiva descartando ramas imposibles tan pronto como detectamos que violan las restricciones.
 En N reinas, cuando colocamos una reina en una fila, solo avanzamos a la siguiente fila si:
@@ -247,7 +257,7 @@ bool reinas(int n) {
 }
 ```
 
-### Branch & bound (branch and bound)
+## Branch & bound (branch and bound)
 
 El **branch & bound** es una técnica de optimización donde:
 
@@ -387,7 +397,7 @@ int go(int p) {
 > configuracion que lo logre.
 
 
-# Orden de busqueda
+## Orden de busqueda
 
 Mientras construimos las soluciones de forma recursiva, es importante el orden
 en el que probamos las opciones.

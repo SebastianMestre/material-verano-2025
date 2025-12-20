@@ -1,0 +1,533 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegray}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{gray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  frame=single,
+  language=C++
+}
+
+\lstset{style=customc}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts}
+\usepackage{hyperref}
+
+\usetheme{Madrid}
+
+\title{Búsqueda exhaustiva y backtracking}
+\author{Sebastian Mestre}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Fuerza bruta}
+
+\begin{frame}{¿Cuándo alcanza con fuerza bruta?}
+  \begin{itemize}
+    \item Para problemas con entrada pequeña (por ejemplo \(N < 20\)) podemos probar \textbf{todas las posibilidades}.
+    \item La idea es explorar el \textbf{espacio de soluciones completo} y quedarnos con la mejor / alguna válida.
+    \item Aunque parezca simple, muchos equipos se complican al implementarlo y pierden puntos en problemas fáciles.
+    \item Objetivo de la clase:
+      \begin{itemize}
+        \item Ver formas estándar de implementar fuerza bruta eficientemente.
+        \item Aprender trucos para \textbf{escribir poco código} y evitar errores.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Subconjuntos y bitmasks}
+
+\begin{frame}{Fuerza bruta sobre subconjuntos}
+  \begin{itemize}
+    \item Para un conjunto de \(n\) elementos, hay \(2^n\) subconjuntos posibles.
+    \item Podemos representar cada subconjunto con un entero de \(0\) a \(2^n - 1\):
+      \begin{itemize}
+        \item El bit \(i\) indica si el elemento \(i\) está presente en el subconjunto.
+      \end{itemize}
+    \item Esto permite recorrer \textbf{todos los subconjuntos} con un for.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recorriendo todos los subconjuntos}
+  \begin{block}{Esquema básico}
+  \begin{lstlisting}[style=customc]
+// mk representa un subconjunto de {0,1,2,...,n-1}
+forn(mk, 1 << n) {
+  forn(i, n) {
+    if (mk & (1 << i)) {
+      // i es elemento del subconjunto mk
+    }
+  }
+}\end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Costo: \(O(2^n \cdot n)\), aceptable para \(n \le 20\) aprox.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: \href{https://cses.fi/problemset/task/1623}{Apple Division (CSES 1623)}}
+  \begin{itemize}
+    \item Dado un arreglo, dividirlo en dos grupos con suma lo más parecida posible.
+    \item Fuerza bruta: probamos todos los subconjuntos como \textbf{un lado} de la partición.
+  \end{itemize}
+  \begin{block}{Implementación típica}
+  \begin{lstlisting}[style=customc]
+ll best = LLONG_MAX;
+forn(mk, 1 << n) {
+  ll s = 0;
+  forn(i, n) if (mk & (1 << i)) s += a[i];
+  ll resto = total - s;
+  ll diff = abs(s - resto);
+  best = min(best, diff);
+}
+cout << best << endl;\end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{\texttt{next\_permutation}}
+
+\begin{frame}[fragile]{Fuerza bruta sobre permutaciones}
+  \begin{itemize}
+    \item A veces queremos probar todos los órdenes posibles de un arreglo.
+    \item En C++ la función \texttt{std::next\_permutation} genera la siguiente permutación lexicográfica.
+  \end{itemize}
+  \begin{block}{Uso típico}
+\begin{lstlisting}[style=customc]
+sort(v.begin(), v.end());
+do {
+  // usar la permutación actual de v
+} while (next_permutation(v.begin(), v.end()));
+\end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Complejidad: \(O(n! \cdot \text{costo de procesar una permutación})\).
+    \item Usable para \(n \le 10\) aprox.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: Codeforces 431B}
+  \begin{itemize}
+    \item \href{https://codeforces.com/contest/431/problem/B}{Problema 431B - Shower Line}.
+    \item 5 estudiantes se ordenan en una fila para usar la ducha.
+    \item Mientras esperan, conversan por pares (1 con 2, 3 con 4, el 5 queda solo).
+    \item Cada vez que alguien entra, la fila se acorta y se vuelven a formar parejas.
+    \item Cada conversación entre \(i\) y \(j\) suma felicidad según una matriz \(g[i][j]\).
+    \item Objetivo: encontrar el orden inicial que maximiza la felicidad total.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Solución por fuerza bruta}
+  \begin{itemize}
+    \item Como \(n = 5\), alcanza con probar las \(5!\) permutaciones.
+    \item Costo total \(O(n! \cdot n^2)\), más que suficiente para este límite.
+  \end{itemize}
+  \begin{block}{Implementación}
+  \begin{lstlisting}[style=customc]
+int const n = 5;
+int g[n][n], p[] = {0, 1, 2, 3, 4};
+int main() {
+  forn(i, n) forn(j, n) cin >> g[i][j];
+  ll best = 0;
+  do {
+    ll happiness = 0;
+    forn(i, n) for (int j = i+1; j < n; j += 2)
+      happiness += g[p[j-1]][p[j]] + g[p[j]][p[j-1]];
+    best = max(best, happiness);
+  } while (next_permutation(p, p + n));
+  cout << best << endl;
+}\end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Más allá de la fuerza bruta pura}
+  \begin{itemize}
+    \item Para \(n\) un poco más grande podemos intentar:
+      \begin{itemize}
+        \item Optimizar el cálculo interno a \(O(n)\) por permutación.
+        \item O usar DP sobre subconjuntos (\(O(2^n \cdot n)\)) cuando el problema lo permite.
+      \end{itemize}
+    \item Idea general: \textbf{aprovechar estructura} del problema para reducir el espacio de búsqueda.
+  \end{itemize}
+\end{frame}
+
+\section{Fuerza bruta recursiva: N reinas}
+
+\begin{frame}{Fuerza bruta recursiva}
+  \begin{itemize}
+    \item Otra forma de fuerza bruta es construir soluciones \textbf{paso a paso} recursivamente.
+    \item Problema clásico: \href{https://cses.fi/problemset/task/1624}{N reinas (Chessboard and Queens, CSES 1624)}.
+    \item Queremos colocar \(N\) reinas en un tablero \(N \times N\) sin que se ataquen entre sí.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Versión muy bruta}
+  \begin{block}{Recorriendo todas las configuraciones}
+  \begin{lstlisting}[style=customc]
+int const maxn = 10;
+int N; // tamaño del tablero
+bool ocupado[maxn * maxn];
+bool cumple_condiciones(); // false si dos reinas se atacan entre si
+
+bool reinas(int n) {
+  if (n == 0) return cumple_condiciones();
+  forn(p, N * N - (n - 1)) {
+    if (ocupado[p]) continue;
+    ocupado[p] = true;
+    if (reinas(n - 1)) return true;
+    ocupado[p] = false;
+  }
+  return false;
+}
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Correcto pero recorre \textbf{muchas configuraciones equivalentes}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Evitando duplicados innecesarios}
+  \begin{itemize}
+    \item La versión anterior considera diferentes órdenes para colocar reinas en las mismas casillas.
+    \item Ejemplo: trata como distintos
+  \end{itemize}
+  \vspace{0.3cm}
+  \begin{center}
+  \begin{tabular}{cc}
+  \begin{tabular}{|c|c|}
+    \hline
+    1 & \phantom{X} \\ \hline
+    \phantom{X} & 2 \\ \hline
+  \end{tabular}
+  &
+  \hspace{1cm}
+  \begin{tabular}{|c|c|}
+    \hline
+    2 & \phantom{X} \\ \hline
+    \phantom{X} & 1 \\ \hline
+  \end{tabular}
+  \end{tabular}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item Pero ambas configuraciones tienen una reina en la casilla 0 y otra en la casilla 3: son equivalentes.
+    \item Podemos imponer un \textbf{orden} para no repetir subconjuntos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Reinas en orden creciente de posición}
+  \begin{block}{Forzando orden en las posiciones}
+  \begin{lstlisting}[style=customc]
+bool reinas(int n, int last) {
+  if (n == 0) return cumple_condiciones();
+  forr(p, last + 1, N * N - (n - 1)) {
+    ocupado[p] = true;
+    if (reinas(n - 1, p)) return true;
+    ocupado[p] = false;
+  }
+  return false;
+}
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Ahora cada conjunto de casillas se visita una sola vez.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Una reina por columna}
+  \begin{itemize}
+    \item En una solución válida solo puede haber \textbf{una reina por columna}.
+    \item Podemos colocar la reina \(n\)-ésima siempre en la columna \(n-1\).
+  \end{itemize}
+  \begin{block}{Iterando por columnas}
+  \begin{lstlisting}[style=customc]
+bool reinas(int n) {
+  if (n == 0) return cumple_condiciones();
+  forr(j, 0, N) {
+    int p = (n-1) * N + j;
+    ocupado[p] = true;
+    if (reinas(n - 1)) return true;
+    ocupado[p] = false;
+  }
+  return false;
+}\end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Solo con estas optimizaciones pasamos de horas a milisegundos para \(N = 10\).
+  \end{itemize}
+\end{frame}
+
+\section{Backtracking}
+
+\begin{frame}{Backtracking: podar temprano}
+  \begin{itemize}
+    \item El backtracking mejora la fuerza bruta recursiva descartando \textbf{ramas imposibles} lo antes posible.
+    \item En N reinas, cuando colocamos una reina en una fila solo avanzamos si:
+      \begin{itemize}
+        \item la columna no está ocupada,
+        \item la diagonal principal no está ocupada,
+        \item la diagonal secundaria no está ocupada.
+      \end{itemize}
+    \item Si alguna falla, retrocedemos (\textit{backtrack}) y probamos otra opción.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Chequeando la condición en cada paso}
+  \begin{block}{Versión ingenua de backtracking}
+  \begin{lstlisting}[style=customc]
+bool reinas(int n) {
+  if (!cumple_condiciones()) return false;
+  if (n == 0) return true;
+  forr(j, 0, N) {
+    ocupado[(n - 1) * N + j] = true;
+    if (reinas(n - 1)) return true;
+    ocupado[(n - 1) * N + j] = false;
+  }
+  return false;
+}
+  \end{lstlisting}
+  \end{block}
+  \begin{itemize}
+    \item Mejor que chequear solo al final, pero todavía podemos optimizar.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Marcando columnas y diagonales}
+  \begin{itemize}
+    \item En lugar de revisar todo el tablero en cada paso, marcamos:
+      \begin{itemize}
+        \item columnas ocupadas (\texttt{c[j]}),
+        \item diagonal principal (\texttt{d1}),
+        \item diagonal secundaria (\texttt{d2}).
+      \end{itemize}
+    \item Si alguna está ocupada, ni siquiera hacemos la llamada recursiva.
+  \end{itemize}
+  \begin{block}{Backtracking eficiente}
+  \begin{lstlisting}[style=customc]
+bool reinas(int n) {
+  if (n == 0) return true;
+  forn(j, 0, N) {
+    int p = (n-1) * N + j;
+    if (c[j] || d1[n + j] || d2[n - j + N]) continue;
+    ocupado[p] = c[j] = d1[n + j] = d2[n - j + N] = true;
+    if (reinas(n - 1)) return true;
+    ocupado[p] = c[j] = d1[n + j] = d2[n - j + N] = false;
+  }
+  return false;
+}\end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{Branch \& bound}
+
+\begin{frame}{Idea de Branch \& Bound}
+  \begin{itemize}
+    \item Técnica para problemas de optimización combinatoria.
+    \item \textbf{Branch}: dividimos el problema en subproblemas recursivos (como backtracking).
+    \item \textbf{Bound}: calculamos una \textbf{cota superior} de la mejor solución posible en cada rama.
+    \item Si la cota ya es peor que la mejor solución conocida, podamo la rama sin seguir explorando.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: tractores en una grilla}
+  \begin{itemize}
+    \item Problema de \href{https://codeforces.com/contest/143/problem/E}{Codeforces 143E}.
+    \item Tenemos una grilla \(N \times M\) y queremos colocar la mayor cantidad de \textbf{tractores}.
+    \item Cada tractor ocupa 5 casillas en forma de T:
+  \end{itemize}
+  \vspace{0.2cm}
+  \begin{center}
+  \begin{verbatim}
+###
+ #
+ #
+  \end{verbatim}
+  \end{center}
+  \begin{itemize}
+    \item Se pueden rotar 90 grados.
+    \item Hay que dar la cantidad máxima de tractores y una configuración que lo logre.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo: tractores en una grilla}
+  \begin{itemize}
+    \item backtracking donde vamos poniendo tractores hasta que no se pueda mas
+    \item fijamos un orden
+    \item en cada paso hay 5 opciones
+      \begin{itemize}
+          \item poner tractor hacia abajo
+          \item poner tractor hacia arriba
+          \item poner tractor hacia la izquierda
+          \item poner tractor hacia la derecha
+          \item no poner tractor
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Backtracking básico para tractores}
+  \begin{block}{Probar todas las formas de poner / no poner}
+  \begin{lstlisting}[style=customc]
+int cnt = 0, board[maxn][maxn]; // manejado por ok(), poner(), sacar()
+int go(int p) {
+  if (p == n * m) return cnt;
+  int const i = p/m, j = p%m;
+  int ans = cnt;
+  forn(r, 5) if (ok(i, j, r)) {
+    poner(i, j, r);
+    ans = max(ans, go(p + 1));
+    sacar(i, j, r);
+  }
+  return ans;
+}\end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Guardando la mejor configuración}
+  \begin{itemize}
+    \item El enunciado pide también \textbf{recuperar} una configuración óptima.
+    \item Guardamos el mejor tablero encontrado hasta ahora.
+  \end{itemize}
+  \begin{block}{Versión con memoria de la mejor solución}
+  \begin{lstlisting}[style=customc]
+int best = 0, best_board[maxn][maxn];
+int go(int p) {
+
+  ...
+  
+  if (ans > best) {
+    best = ans;
+    memcpy(best_board, board, sizeof(board));
+  }
+
+  return ans;
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Podando con una cota superior}
+  \begin{itemize}
+    \item Lo anterior funciona, pero el algoritmo es muy lento.
+    \item Idea: si incluso llenando todas las casillas vacías no podemos superar \texttt{best}, no vale la pena seguir.
+  \end{itemize}
+  \begin{block}{Branch \& bound}
+  \begin{lstlisting}[style=customc]
+int go(int p) {
+  if (p == n * m) return cnt;
+
+  int rem = 0;
+  forr(q, p, n * m) rem += (tablero[q / m][q % m] == 0);
+  int opt = cnt + rem / 5;
+  if (opt <= best) return opt; // no se puede mejorar
+
+  ...
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\section{Orden de búsqueda}
+
+\begin{frame}{Importancia del orden de búsqueda}
+  \begin{itemize}
+    \item Mientras construimos soluciones recursivamente, el \textbf{orden} en que probamos opciones importa mucho.
+    \item Un buen orden puede hacer que encontremos soluciones rápido y podamos podar más.
+    \item En el problema anterior es importante que la opcion "no poner tractor" sea la ultima que probamos. Esto es asi la busqueda encuentra rapidamente soluciones con "bastantes" tractores y la idea branch\&bound puede podar mucho
+    \item Ejemplo clásico: el paseo de un caballo en un tablero de ajedrez (Knight's tour).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Heurística para Knight's tour}
+  \begin{itemize}
+    \item Dado un tablero \(N \times M\), queremos que un caballo visite todas las casillas exactamente una vez y vuelva al inicio.
+    \item Backtracking básico es demasiado lento.
+    \item Heurística: siempre movernos a la casilla con \textbf{menos vecinos libres}.
+  \end{itemize}
+  \begin{itemize}
+    \item Para \(N = M = 6\):
+      \begin{itemize}
+        \item backtracking básico tarda \(\sim 20\) segundos;
+        \item con la heurística tarda \(\sim 0{,}01\) segundos.
+      \end{itemize}
+    \item Para \(N = M = 8\), el backtracking básico es prácticamente imposible de correr.
+    \item Con la heurística podemos llegar a \(N = M = 200\) en milisegundos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Orden aleatorio en N reinas}
+  \begin{itemize}
+    \item Otro ejemplo: N reinas con backtracking ya optimizado.
+    \item Si probamos siempre las columnas en orden creciente, a veces caemos en casos muy malos.
+    \item Si probamos las columnas en orden \textbf{aleatorio}, muchas instancias se resuelven muchísimo más rápido.
+  \end{itemize}
+  \begin{block}{Probar columnas en orden aleatorio}
+  \begin{lstlisting}[style=customc]
+bool go(int i) {
+  if (i == n) return true;
+  int idx[n];
+  forn(j, n) idx[j] = j;
+  random_shuffle(idx, idx + n);
+  for (int j : idx) {
+    if (c[j] || d1[i + j] || d2[i - j + n]) continue;
+    c[j] = d1[i + j] = d2[i - j + n] = true;
+    col[i] = j;
+    if (go(i + 1)) return true;
+    c[j] = d1[i + j] = d2[i - j + n] = false;
+  }
+  return false;
+}
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Resumen}
+  \begin{itemize}
+    \item La \textbf{búsqueda exhaustiva} (fuerza bruta) es una herramienta poderosa para \(N\) chico.
+    \item Técnicas clave:
+      \begin{itemize}
+        \item bitmasks para subconjuntos,
+        \item \texttt{next\_permutation} para permutaciones,
+        \item recursión con buenas representaciones del espacio de estados,
+        \item backtracking y branch \& bound para podar muchas ramas,
+        \item elegir bien el \textbf{orden de búsqueda}.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preguntas}
+  \centering
+  \Huge
+  \textbf{Q\&A}
+\end{frame}
+
+\end{document}
