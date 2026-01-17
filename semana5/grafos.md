@@ -198,6 +198,58 @@ while (u != -1) {
 reverse(begin(path), end(path));
 ```
 
+## Grafos implicitos
+
+Muchas veces, en vez de construir el grafo que nos da el problema, es más cómodo o más eficiente modificar los algoritmos para que funcionen con representaciones "raras" del grafo.
+
+Ya hablamos esto en la sección de grafos de estados.
+
+Otro ejemplo común es en problemas que son sobre una grilla. En esos, en vez de construir los nodos y aristas, podemos recorrer la grilla directamente, construyendo las aristas en el momento que las necesitamos.
+
+La ventaja sería que usamos menos memoria, y menos tiempo para construir el grafo.
+
+Si lo hacemos bien, no nos ocupa más código que si construimos el grafo explicitamente.
+
+```cpp
+using cell = pair<int,int>;
+cell offsets[] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+inplace_vector<cell, 4> adj(cell u) {
+    inplace_vector<cell, 4> ans;
+    auto [u1, u2] = u;
+    for (auto [d1, d2] : offsets) {
+        int v1 = u1 + d1, v2 = u2 + d2;
+        if (v1 < 0 || v1 >= n || v2 < 0 || v2 >= m) continue;
+        ans.push_back({v1, v2});
+    }
+    return ans;
+}
+
+// despues en el recorrido:
+for (cell v : adj(u)) { // notar que usamos parentesis en vez de corchetes para obtener los vecinos
+    Q.push(v);
+}
+```
+
+Este codigo usa [`inplace_vector`](https://en.cppreference.com/w/cpp/container/inplace_vector.html), que es como vector pero con un tamaño máximo predeterminado, y no reserva memoria dinámica.
+
+Desafortunadamente `inplace_vector` es parte de C++26, y (por ahora) no está disponible en la mayoria de jueces online.
+
+Si siempre tenemos **exactamente** 4 vecinos, podemos usar un `array<cell, 4>` en vez de `inplace_vector`.
+
+En cambio, si, como en este caso, podemos tener menos de 4 vecinos, tenemos que hacerlo mucho mas manualmente (o usar vector, pero es mucho mas lento).
+
+```cpp
+for (auto [d1, d2] : offsets) {
+    auto [u1, u2] = u;
+    int v1 = u1 + d1, v2 = u2 + d2;
+    if (v1 < 0 || v1 >= n || v2 < 0 || v2 >= m) continue;
+    Q.push({v1, v2});
+}
+```
+
+> Otra idea es aprovechar el small string optimization de `std::basic_string`, pero nos podemos llevar sorpresas porque el tope de tamaño puede ser distinto en distintos jueces.
+
 ## Grafos de estados
 
 En muchos problemas, el grafo que representa el problema es casi obvio.
@@ -274,7 +326,6 @@ while (!Q.empty()) {
 
 Acá la desventaja es tener que modificar el código de una forma espécifica para el problema. Esto no es tan grave para BFS, pero con algoritmos mas complejos (e.g. Dinitz para max flow) puede ser un problema.
 
-## Trucos varios
 
 ### BFS multisource
 
