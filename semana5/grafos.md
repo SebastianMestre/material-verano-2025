@@ -1,12 +1,16 @@
 # Introducción a los grafos
 
-Un **grafo** es una estructura matemática que modela un conjunto de objetos (llamados **vértices** o **nodos**) y las conexiones entre ellos (llamadas **aristas** o **edges**).
+Un **grafo** es una estructura matemática que modela un conjunto de objetos (llamados **vértices** o **nodos**) y las conexiones entre ellos (llamadas **aristas** o **arcos**).
+
+![Ejemplo de grafo simple](img/ejemplo1.png)
 
 Algunas **aplicaciones clásicas** de los grafos incluyen:
 
 - Detectar partes de una red que estén desconectadas.
 - Encontrar **caminos más cortos** en mapas (por ejemplo, rutas GPS).
 - Resolver problemas clásicos como los **puentes de Königsberg**, el cual motivó la teoría de grafos cuando Euler intentó determinar si era posible cruzar todos los puentes de una ciudad sin cruzar el mismo puente dos veces.
+
+![Los puentes de Königsberg](img/konisberg.png)
 
 ## Conceptos basicos
 
