@@ -212,7 +212,7 @@ Si lo hacemos bien, no nos ocupa más código que si construimos el grafo explic
 
 ```cpp
 using cell = pair<int,int>;
-cell offsets[] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+cell offsets[] = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
 inplace_vector<cell, 4> adj(cell u) {
     inplace_vector<cell, 4> ans;
