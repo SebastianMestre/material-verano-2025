@@ -202,13 +202,9 @@ reverse(begin(path), end(path));
 
 Muchas veces, en vez de construir el grafo que nos da el problema, es más cómodo o más eficiente modificar los algoritmos para que funcionen con representaciones "raras" del grafo.
 
-Ya hablamos esto en la sección de grafos de estados.
+Un ejemplo común es en problemas que son sobre una grilla. En esos, en vez de construir los nodos y aristas, podemos recorrer la grilla directamente, generando las aristas en el momento que las necesitamos.
 
-Otro ejemplo común es en problemas que son sobre una grilla. En esos, en vez de construir los nodos y aristas, podemos recorrer la grilla directamente, construyendo las aristas en el momento que las necesitamos.
-
-La ventaja sería que usamos menos memoria, y menos tiempo para construir el grafo.
-
-Si lo hacemos bien, no nos ocupa más código que si construimos el grafo explicitamente.
+La ventaja sería que usamos menos memoria, y menos tiempo para construir el grafo. Si lo hacemos bien, no nos ocupa más código que si construimos el grafo explicitamente.
 
 ```cpp
 using cell = pair<int,int>;
