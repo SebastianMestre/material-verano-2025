@@ -11,7 +11,7 @@
 
 Famosamente, *La combinatoria es el arte de contar*.
 
-Más precisamente, la combinatoria estudia formas de calcular el numero de elementos de un conjunto finito cuando el conjunto es demasiado grande para enumerarlos todos.
+Especificamente, la combinatoria estudia formas de calcular el numero de elementos de un conjunto finito (cuando es demasiado grande para enumerarlos).
 
 ## Principios de la suma y del producto
 
@@ -68,11 +68,187 @@ Las ideas basicas de la combinatoria son tan intuitivas que podemos pasar direct
 
   Si un conjunto se forma combinando un elemento de un conjunto y otro de otro, sin restricciones, el número de elementos del conjunto es el producto del número de elementos de cada conjunto.
 
+## Permutaciones
+
+Consideremos una colección de n elementos. El numero de formas de ordenarlos es n! = n * (n-1) * (n-2) * ... * 1.
+
+Por ejemplo, si tenemos 3 elementos, A, B y C, las formas de ordenarlos son:
+
+- ABC
+- ACB
+- BAC
+- BCA
+- CAB
+- CBA
+
+¿Por qué?
+
+Imaginate que vamos sacando los elementos de una bolsa y los vamos poniendo en una fila.
+
+Para el primer elemento, tenemos n opciones.
+Para el segundo elemento, tenemos n-1 opciones.
+Para el tercer elemento, tenemos n-2 opciones.
+...
+Para el n-esimo elemento, tenemos 1 opcion.
+
+Esto no es, técnicamente, una aplicación del principio del producto, pero es muy similar.
+
+## Agrupar cosas
+
+Cual es el i-ésimo numero que tiene una cantidad par de unos en su representación binaria?
+
+Emparejemos cada numero con el numero que se obtiene al cambiar su bit menos significativo. Por ejemplo:
+
+    101000 <-> 101001
+
+Fijate que si a la pareja del numero le aplicamos la misma operacion, volvemos al numero original, por lo que tiene sentido la noción de emparejar.
+
+Aparte, los numeros que son pareja también son consecutivos.
+
+       0 (par)   <->    1 (impar)
+      10 (impar) <->   11 (par)
+     100 (impar) <->  101 (par)
+     110 (par)   <->  111 (impar)
+    1000 (impar) <-> 1001 (par)
+    1010 (par)   <-> 1011 (impar)
+    1100 (par)   <-> 1101 (impar)
+    1110 (impar) <-> 1111 (par)
+
+Entonces, el i-ésimo numero con cantidad par de unos pertenece al i-ésimo grupo, que está formado por los numeros `2i-2` y `2i-1`.
+
+Entre esos dos numeros podemos simplemente chequear cual de los dos tiene una cantidad par de unos, y esa es la respuesta.
+
 ## Numeros combinatorios
 
-## Contar el complemento
+Cuantas formas hay de mezclar A piedras azules y B piedras rojas?
 
-En muchos problemas, el problema tiene pinta de "contar todas las cosas que cumplen una condicion", pero es mucho mas facil contar un conjunto mas grande, y restarle las que no cumplen la condicion.
+Primero contamos las formas de mezclar todas las piedras en una fila. Esto es (A+B)!.
+
+Estas son algunas de ellas, con A = 2 y B = 3.
+
+    R3 A2 R1 R2 A1
+    A2 R3 R2 R1 A1
+    R3 A2 A1 R2 R1
+    A1 A2 R2 R3 R1
+    A2 R1 R2 R3 A1
+    R3 A1 R2 A2 R1
+    A1 R1 R3 R2 A2
+    R1 R3 A2 A1 R2
+    A2 R1 R2 A1 R3
+    A1 R2 R1 A2 R3
+    R1 R2 A2 A1 R3
+    A1 R3 R1 R2 A2
+    R3 R2 A1 A2 R1
+    R2 A2 R1 A1 R3
+    R1 R2 A1 A2 R3
+    A2 A1 R1 R2 R3
+    R1 R2 R3 A1 A2
+    R3 R2 R1 A1 A2
+    A1 R2 A2 R3 R1
+    A2 R1 R3 R2 A1
+
+Ahora, dentro del grupo azul podemos ordenar las piedras de menor a mayor. Inevitablemente, repetiremos algunas permutaciones.
+
+    R3 A1 R1 R2 A2
+    A1 R3 R2 R1 A2
+    R3 A1 A2 R2 R1
+    A1 A2 R2 R3 R1
+    A1 R1 R2 R3 A2
+    R3 A1 R2 A2 R1
+    A1 R1 R3 R2 A2
+    R1 R3 A1 A2 R2
+    A1 R1 R2 A2 R3
+    A1 R2 R1 A2 R3
+    R1 R2 A1 A2 R3
+    A1 R3 R1 R2 A2
+    R3 R2 A1 A2 R1
+    R2 A1 R1 A2 R3
+    R1 R2 A1 A2 R3 # REPETIDO
+    A1 A2 R1 R2 R3
+    R1 R2 R3 A1 A2
+    R3 R2 R1 A1 A2
+    A1 R2 A2 R3 R1
+    A1 R1 R3 R2 A2 # REPETIDO
+
+De hecho, por cada permutacion con piedras azules ordenadas, hay A! permutaciones que dan esa permutacion al ordenar las piedras azules. O sea, la cantidad de ordenes posibles después de ordenar las piedras azules es (A + B)! / A!.
+
+Podemos repetir lo mismo con las piedras rojas: si las ordenamos vamos a encontrar repetidos.
+
+    R1 A1 R2 R3 A2
+    A1 R1 R2 R3 A2
+    R1 A1 A2 R2 R3
+    A1 A2 R1 R2 R3
+    A1 R1 R2 R3 A2 # REPETIDO
+    R1 A1 R2 A2 R3
+    A1 R1 R2 R3 A2 # REPETIDO
+    R1 R2 A1 A2 R3
+    A1 R1 R2 A2 R3
+    A1 R1 R2 A2 R3 # REPETIDO
+    R1 R2 A1 A2 R3 # REPETIDO
+    A1 R1 R2 R3 A2 # REPETIDO
+    R1 R2 A1 A2 R3 # REPETIDO
+    R1 A1 R2 A2 R3 # REPETIDO
+    R1 R2 A1 A2 R3 # REPETIDO
+    A1 A2 R1 R2 R3 # REPETIDO
+    R1 R2 R3 A1 A2
+    R1 R2 R3 A1 A2 # REPETIDO
+    A1 R1 A2 R2 R3
+    A1 R1 R2 R3 A2 # REPETIDO
+
+Nuevamente, por cada permutación con piedras azules y rojas ordenadas, hay B! permutaciones con piedras azules ordenadas que dan esa permutacion al ordenar las piedras rojas. O sea, la cantidad de ordenes posibles después de ordenar las piedras rojas se divide por B!, y nos da (A + B)! / A! / B!.
+
+> Visto de forma más general, lo que tenemos acá son clases de permutaciones que son equivalentes, y estamos contando el número de clases. Esto es posible ya que:
+>
+> - sabemos el tamaño total del conjunto
+> - todas las clases tienen el mismo número de elementos
+> - sabemos el tamaño de cada clase
+>
+> Es un caso particular de un cociente en un grupo (el mismo concepto que usamos para la aritmetica modular).
+
+---------------------
+
+Otra forma de verlo es que tenemos N=A+B piedras y queremos pintar de azul A de ellas. En este caso, podemos expresar B como N-A, y el resultado es N! / A! / (N-A)!.
+
+Esta formula es muy famosas y se llama "coeficiente binomial".
+
+Se puede conceptualizar como la cantidad de formas de elegir A elementos de un conjunto de N elementos.
+
+Notacion `(N choose K)`
+
+    ( N )
+    (   )
+    ( K )
+
+## Problema
+
+Imaginate un tablero de NxM, en el cual queremos dibujar K rectangulos usando piedras, cada uno adentro del anterior.
+
+Por ejemplo, si N=12, M=15 y K=3 una posibilidad es:
+
+    xxxxxxxxxxxxxxx
+    x xxxxxxxxxxx x
+    x x         x x
+    x x         x x
+    x x xxxx    x x
+    x x x  x    x x
+    x x x  x    x x
+    x x xxxx    x x
+    x x         x x
+    x xxxxxxxxxxx x
+    x             x
+    xxxxxxxxxxxxxxx
+
+De cuantas formas se puede hacer esto?
+
+> Como hay K rectangulos, tenemos 2K lados horizontales y 2K lados verticales.
+>
+> De entre todas las filas, elegimos 2K para colocar los lados horizontales. Hay (N choose 2K) opciones.
+>
+> De entre todas las columnas, elegimos 2K para colocar los lados horizontales. Hay (M choose 2K) opciones.
+>
+> Por lo tanto, la cantidad total de formas es (N choose 2K) * (M choose 2K).
+
+## Contar el complemento
 
 Problema: cuantos rectangulos se pueden formar en la cuadricula de la figura? (los rectangulos deben tener sus lados contenidos en las lineas ya dibujadas)
 
@@ -91,7 +267,6 @@ Problema: cuantos rectangulos se pueden formar en la cuadricula de la figura? (l
 6 +----+----+----+----+----+----+
   |    |    |    |    |    |    |
 7 +----+----+----+----+----+----+
-
 ```
 
 Primero contamos todos los rectangulos, incluso si pasan por el hueco: elegimos dos lineas horizontales y dos lineas verticales de la figura, sobre las que estaran los lados del rectangulo. La cantidad de opciones es (7 choose 2) * (7 choose 2) = 21 * 21 = 441.
@@ -123,8 +298,8 @@ La respuesta al problema es 441 - 54 - 54 - 36 = 297.
 > Analogamente, las que usan la recta 4 tambien son 36.
 >
 > Entonces, la cantidad total de rectangulos es 225 + 36 + 36 = 297.
-
-[Mathematical Tapestry](https://www.maa.org/press/maa-reviews/mathematical-tapestry) es un libro de combinatoria escrito por John Conway y Richard Guy.
+>
+> En este caso la solucion por el complemento no es mas corta, pero muchas veces resulta más fácil razonar sobre los objetos que cumplen con una propiedad (tocan el hueco) que contar los que no la cumplen.
 
 ## Problemas
 
