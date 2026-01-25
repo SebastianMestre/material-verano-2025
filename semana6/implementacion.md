@@ -49,7 +49,7 @@ Tipicamente, en los problemas de combinatoria se cumplen estas condiciones. Acá
 - `n` es suficientemente chico como para que podamos precomputar los factoriales y sus inversos.
 
 ```c++
-int fac[n+1], ifac[n+1]; // factoriales y sus inversos
+int fac[maxn+1], ifac[maxn+1]; // factoriales y sus inversos
 int comb(int n, int k) {
     if (k < 0 || k > n) return 0;
     return mul(fac[n], mul(ifac[k], ifac[n-k]));
@@ -121,7 +121,7 @@ int comb(int n, int k) {
 
 Notar que esto tambien funciona para el caso que `n-k` es chico, simplemente porque `comb(n, k) = comb(n, n-k)`.
 
-# n < 10^5
+### n < 10^5
 
 La idea es trabajar con la factorizacion en primos de los factoriales.
 
@@ -169,7 +169,7 @@ Hay muchisimos casos que podriamos analizar, pero quiero dejar la idea que el ca
 
 Por ejemplo, en una competencia virtual tuvimos que usar una idea como la que sigue:
 
-### m primo, m <= n < 2*m, k > m, n < 10^7
+### m primo, m <= n < 2\*m, k > m, n < 10^7
 
 La dificultad acá es que `n` es mayor a `m`, por lo que `m` aparece en la factorización de `n!` y entonces, `fac[n]` es igual a 0 en módulo `m`.
 
