@@ -1,6 +1,6 @@
 ## Notas y presentaciones
 
-- combinatoria [notas](combinatoria), [presentacion](combinatoria.pdf)
-- recurrencias (programación dinamica) [notas](recurrencias), [presentacion](recurrencias.pdf)
+- combinatoria [notas](combinatoria)
+- Apendice: implementación de cuentas de combinatoria en módulo [notas](implementacion)
 
 ## Adjuntos
