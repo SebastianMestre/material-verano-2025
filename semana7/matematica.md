@@ -1,6 +1,12 @@
-<https://cses.fi/problemset/task/1618> - factoriales, factorizacion
+# Teoría de números
 
-Cuando hablamos de numeros estamos hablando de naturales.
+La teoría de números estudia las relaciones entre números y sus multiplos y
+divisores. La mayoría de las pruebas de ICPC tienen al un problema de este tema.
+
+Es un tema importante, pero no tan importante como para que todos lo estudien a
+fondo. Es recomendable que un solo miembro del equipo lo tenga bien estudiado.
+
+En este campo, cuando hablamos de numeros nos referimos a los naturales.
 
 # Divisores
 
@@ -329,6 +335,8 @@ map<int, int> factor(int n) {
 	return f;
 }
 ```
+
+- <https://cses.fi/problemset/task/1618> - factoriales, factorizacion
 
 ## Criba de Eratóstenes 2.0
 
