@@ -24,10 +24,13 @@ Estos dos casos son mutuamente excluyentes. Entonces, por el principio de la sum
 Para calcular estos valores, podemos definir un arreglo `F` tal que `F[i] = #F(i)`.
 
 ```cpp
-vector<int> F(N+1);
-F[1] = 1;
-F[2] = 2;
-forr(i, 3, N+1) F[i] = F[i-1] + F[i-2];
+int dominos(int N) {
+    vector<int> F(N+1);
+    F[1] = 1;
+    F[2] = 2;
+    forr(i, 3, N+1) F[i] = F[i-1] + F[i-2];
+    return F[N];
+}
 ```
 
 Para este problema sencillo, es facil pasar de la idea a la implementación, pero hay varios pasos que estamos dando por sentado, y que en otros problemas se pueden complicar.
