@@ -101,25 +101,50 @@ int caminos(vector<vector<bool>> obstaculo) {
 
 A los posibles subproblemas que podemos definir, los llamamos "estados".
 
+En el problema anterior, el estado son las subgrillas de tamaño `(i)x(j)` que en nuestro programa representamos con el par de enteros `(i, j)`.
+
+Igual que en problemas de grafos donde el conjunto de nodos son "cosas raras", acá el conjunto de estados puede ser bastante raro.
+
+### Problema: Subsecuencias
+
+Dada una string, contar subsequencias que no contienen la substring "2001" (mi año de nacimiento :p).
+
+> Para una versión moderadamente más difícil, cambiar la substring prohibida a "2026"
+>
+> Para un desafío final, usar una string arbitraria `S`, dada también como input.
+
+Estados:
+
+`S(i,j) = { subsequencias de S[i..N] que no contienen la substring "2001"[j..4]}`
+
+O sea, j es como un offset para la substring "2001" que nos interesa.
+
+La idea es que representa una cantidad de caracteres de "2001" que acaban de aparecer en la subsequencia.
+
+Si en algun momento llega a 4, entonces la subsequencia contiene la substring "2001" y no es valida (devolvemos 0)
+
+> Esto se complica con "2026" porque al encontrar "202" no sabemos si nos vamos a encontrar con un "6" o con un "026", que ambas cosas estarían prohibidas.
+>
+> En el caso general de una string arbitraria, se complica aún más porque esto mismo puede pasar varias veces en la misma cadena prohibida.
+
+Bueno el conjunto de estados es medio raro. Es como que nos podemos imaginar un algoritmo que va buscando la string "2001" y los estados de la DP se corresponden con el estado del algoritmo.
+
+TODO: implementar
+
 ## Orden de dependencias
 
 Si encontramos la forma de calcular un resultado a partir de resultados de subproblemas, esto no nos resuelve del todo el tema.
 
 Para poder calcular un valor particular tenemos que primero calcular todos los valores de los que depende. Para estos, necesitamos sus dependencias, y asi sucesivamente.
 
-Si terminamos dando la vuelta y, transitivamente, un valor depende de si mismo, entonces no vamos a poder calcularlo. (excepto casitos especiales)
+En los problemas que vimos hasta ahora siempre tuvimos suerte y el bucle más obvio siempre cumplia con las dependencias pero:
+
+- Si las dependencias "van y vienen" y un valor depende de si mismo, entonces no vamos a poder calcularlo
+- Si el problema no tiene forma de tabla es complicado escribir un for que recorre los estados en un orden bueno
 
 En particular, tenemos que elegir un orden para calcular los valores, que respete las dependencias.
 
 Imaginate un grafo que los nodos son los estados y las aristas son dependencias. Tenemos que encontrar un orden de los nodos tal que cada arista apunte a un nodo anterior. Esto se llama un "orden topológico".
-
-### Orden "de menor a mayor"
-
-Normalmente hay un orden facilito para calcular los valores.
-
-En el de los dominós vimos que cada valor depende de los dos anteriores. Si calculamos de menor a mayor, entonces las dependencias de cada valor ya están calculadas cuando toca calcularlo.
-
-La idea es elegir un orden que sea facil de recorrer con un bucle.
 
 ### Construir el orden dinámicamente
 
@@ -163,6 +188,14 @@ int domino(int n) {
 ```
 
 Para este problema con una recurrencia tan simple, es medio overkill, pero es muy util cuando la relación de recurrencia es mas complicada.
+
+### Problema: Caminos Hamiltonianos
+
+Subproblemas:
+
+```
+H(u, S) = { caminos Hamiltonianos que empiezan en u y visitan todos los vertices en S exactamente una vez }
+```
 
 ---------------
 
