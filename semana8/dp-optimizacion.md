@@ -103,7 +103,7 @@ Otra propiedad de la funcion minimo es que es idempotente (`min(a, a) = a`), y e
 
 O sea, si encontramos una forma de descomponer el problema en subproblemas, mientras estemos cubriendo todos los casos, pueden haber casos que se cubran en mas de un subproblema.
 
-No encontré un buen ejemplo de problema para este principio.
+No encontré un problema que ejemplifique perfectamente este principio, pero creo que el siguiente problema es razonable para ilustrar la idea:
 
 ## Problema clásico: Distancia de edición
 

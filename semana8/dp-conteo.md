@@ -1,6 +1,22 @@
 
 ## Programación dinámica.
 
+Programación dinámica es uno de los temas más comunes en competencias de programación.
+
+Técnicamente, es un método para resolver problemas de optimización pero, como todas las ideas más importantes se pueden aplicar también a problemas de conteo, en programación competitiva englobamos todos los problemas que usan estas ideas bajo el nombre de "programación dinámica" o DP (de Dynamic Programming).
+
+>  Una pregunta interesante es: «¿De dónde salió el nombre “programación dinámica”?»
+>
+> Los años cincuenta no fueron buenos para la investigación matemática. Teníamos en Washington a un caballero muy interesante llamado Wilson. Era Secretario de Defensa y, de hecho, tenía un miedo y un odio patológico a la palabra «investigación». ... Su rostro se congestionaba, se ponía rojo y se volvía violento si la gente usaba el término investigación en su presencia. Puedes imaginar, entonces, lo que sentía por el término matemático.
+>
+> Por lo tanto, sentí que tenía que hacer algo para proteger a Wilson y a la Fuerza Aérea del hecho de que realmente estaba haciendo matemáticas
+>
+> En primer lugar, me interesaban la planificación, la toma de decisiones, el pensamiento. Pero planificación no es una buena palabra por varias razones. Decidí, por lo tanto, usar la palabra «programación». Aparte, quería transmitir la idea de que esto era dinámico, que era multietapa, que variaba en el tiempo. La palabra «dinámico» tiene una propiedad muy interesante como adjetivo, y es que es imposible usarla en un sentido peyorativo.
+>
+>Intentá pensar en alguna combinación que pueda darle un significado peyorativo. Es imposible. Así que pensé que programación dinámica era un buen nombre.
+>
+> — Richard Bellman, creador de la programación dinámica
+
 ## Conteo de conjuntos inductivos
 
 Cuando tenemos una familia de conjuntos, muchas veces podemos calcular el tamaño de un conjunto en términos de los tamaños de otros conjuntos de la familia.
