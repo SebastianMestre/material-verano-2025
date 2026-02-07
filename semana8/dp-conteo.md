@@ -21,13 +21,13 @@ Si ponemos fichitas horizontales a la izquierda de todo, nos queda un hueco de `
 
 Estos dos casos son mutuamente excluyentes. Entonces, por el principio de la suma, el tamaño del conjunto es `#F(N) = #F(N-1) + #F(N-2)`.
 
-Para calcular estos valores, podemos definir un arreglo `dp` tal que `dp[i] = #F(i)`.
+Para calcular estos valores, podemos definir un arreglo `F` tal que `F[i] = #F(i)`.
 
 ```cpp
-vector<int> dp(N+1);
-dp[1] = 1;
-dp[2] = 2;
-forr(i, 3, N+1) dp[i] = dp[i-1] + dp[i-2];
+vector<int> F(N+1);
+F[1] = 1;
+F[2] = 2;
+forr(i, 3, N+1) F[i] = F[i-1] + F[i-2];
 ```
 
 Para este problema sencillo, es facil pasar de la idea a la implementación, pero hay varios pasos que estamos dando por sentado, y que en otros problemas se pueden complicar.
