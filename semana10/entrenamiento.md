@@ -1,6 +1,13 @@
 
 # Entrenamiento y estrategia de un equipo II
 
+> - <https://codeforces.com/blog/entry/98806>
+> - <https://nor-blog.pages.dev/posts/2023-01-19-learning-better/>
+> - <https://codeforces.com/blog/entry/98621>
+> - <https://codeforces.com/blog/entry/91114>
+> - <https://nor-blog.pages.dev/posts/2024-09-06-on-probabilistic-thinking/>
+> - <https://nor-blog.pages.dev/posts/2025-01-02-calibrating-confidence/>
+
 El entrenamiento en ICPC es super simple:
 
 - Hay que hacer muchos problemas para mejorar individualmente.
