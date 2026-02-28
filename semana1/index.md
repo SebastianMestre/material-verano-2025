@@ -1,4 +1,4 @@
-# Semana 1
+## Notas y presentaciones
 
 - Información sobre el curso
 - Introduccion a ICPC
@@ -6,6 +6,8 @@
 - El notebook de ICPC
 - Scripts para compilar y correr tests localmente
 - Entrenamiento y estrategia de un equipo
+
+## Adjuntos
 
 ## Informacion sobre el curso
 

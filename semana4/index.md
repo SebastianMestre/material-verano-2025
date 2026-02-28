@@ -1,4 +1,4 @@
-## Semana 4
+## Notas y presentaciones
 
 - Busqueda exhaustiva [notas](busqueda-exhaustiva.md) [presentacion](busqueda-exhaustiva.pdf)
 
