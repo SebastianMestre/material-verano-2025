@@ -2,20 +2,23 @@
 
 ## Semana 1
 
-- Setup para compilar y correr tests localmente
+- Informacion sobre el curso e introduccion a ICPC
+- El notebook de ICPC
+- Scripts para compilar y correr tests localmente
 - Sitios para competir en equipo e individualmente
 - Entrenamiento y estrategia de un equipo
-- Q&A
 
 ## Semana 2
 
+- Plantilla de codigo
 - Costo asintótico y complejidad computacional
-- Estructuras de datos I (pilas, colas, set, map)
+- C++ y STL
 
 ## Semana 3
 
-- Invariantes (de las 3 fichas en la esquina de un tablero infinito, monotonic stack)
-- Busqueda binaria
+- Logica de Hoare
+- Aritmetica modular
+- Invariantes
 
 ## Semana 4
 
@@ -23,12 +26,12 @@
 
 ## Semana 5
 
-- Grafos I (Representación, DFS, BFS)
+- Introduccion a grafos (representacion, DFS, BFS)
 
 ## Semana 6
 
 - Combinatoria (permutaciones, combinaciones, bolitas y palitos, evitar doble conteo)
-- Programación dinámica I (conteo: fibonacci, contar caminos en grillas, etc)
+- Apendice: implementacion de cuentas de combinatoria en modulo
 
 ## Semana 7
 
@@ -36,21 +39,15 @@
 
 ## Semana 8
 
-- Entrenamiento y estrategia de un equipo II
-- Q&A
+- Programacion dinamica I (conteo)
+- Programacion dinamica II (optimizacion)
 
 ## Semana 9
 
-- Estructuras de datos II (segment tree, trie)
+- Consultas en rango (segment tree)
 
 ## Semana 10
 
-- Programación dinámica II (optimizacion: mochila,caminos minimos en grillas, etc)
-
-## Semana 11
-
-- Grafos II (dijkstra, kruskal)
-
-## Semana 12 (extra)
-
-- Algoritmos de raíz cuadrada (partir en bloques de raiz(N), separar en grandes y chicos, rebuild cada raiz pasos, agrupar los de igual tamaño)
+- Entrenamiento y estrategia de un equipo II
+- Algoritmos de raíz cuadrada
+- Q&A
